@@ -19,9 +19,13 @@ public class LoginAction extends ActionSupport implements ModelDriven<User> {
     @Autowired
     private UserService userService;
 
-    private User model = new User();
+    private User user = new User();
 
-    @Action(value = "login")
+    @Action(value = "login", results = {
+            @Result( name = "success", type = "json" )
+    }, interceptorRefs = {
+            @InterceptorRef("json")
+    })
     public String execute() throws Exception {
         User user = getModel();
         if (userService.login(user) != null) {
@@ -39,10 +43,6 @@ public class LoginAction extends ActionSupport implements ModelDriven<User> {
 
     @Override
     public User getModel(){
-        return model;
-    }
-
-    public void setModel(User model) {
-        this.model = model;
+        return user;
     }
 }

@@ -5,6 +5,14 @@
 <struts>
     <constant name="struts.devMode" value="true"/>
     <package name="default" namespace="/" extends="struts-default, json-default">
+        <interceptors>
+            <interceptor name="json" class="org.apache.struts2.json.JSONInterceptor"/>
+            <interceptor-stack name="jsonStack">
+                <interceptor-ref name="json"/>
+                <interceptor-ref name="defaultStack"/>
+            </interceptor-stack>
+        </interceptors>
+        <default-interceptor-ref name="jsonStack"/>
         <default-action-ref name="index" />
         <action name="index">
             <result>/index.jsp</result>
