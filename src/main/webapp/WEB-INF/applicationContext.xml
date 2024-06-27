@@ -17,7 +17,7 @@
         <property name="driverClassName" value="com.mysql.cj.jdbc.Driver"/>
         <property name="jdbcUrl" value="jdbc:mysql://localhost:3306/dbapp?serverTimezone=UTC"/>
         <property name="username" value="root"/>
-        <property name="password" value="Shaw20240506"/>
+        <property name="password" value="15023660918"/>
     </bean>
 
     <bean id="sessionFactory" class="org.springframework.orm.hibernate5.LocalSessionFactoryBean">

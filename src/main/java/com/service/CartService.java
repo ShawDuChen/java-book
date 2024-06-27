@@ -11,4 +11,5 @@ public interface CartService {
     public Cart findById(long id);
     public List<Cart> getAll();
     public List<Cart> search(int page, int size);
+    public void createOrder(List<Long> ids);
 }

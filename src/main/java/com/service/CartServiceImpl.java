@@ -2,6 +2,7 @@ package com.service;
 
 import com.model.Cart;
 import com.model.Product;
+import com.model.ShopOrder;
 import com.model.User;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -66,7 +67,7 @@ public class CartServiceImpl implements CartService {
     @Override
     public List<Cart> getAll() {
         Session session = getSession();
-        Query<Cart> query = session.createQuery("from cart ORDER BY createdAt desc", Cart.class);
+        Query<Cart> query = session.createQuery("from cart c where c.order=null ORDER BY createdAt desc", Cart.class);
         return query.getResultList();
     }
 
@@ -74,9 +75,23 @@ public class CartServiceImpl implements CartService {
     public List<Cart> search(int page, int size) {
         int start = (page - 1) * size;
         Session session = getSession();
-        Query<Cart> query = session.createQuery("from cart order by createdAt", Cart.class);
+        Query<Cart> query = session.createQuery("from cart c where c.order=null order by createdAt", Cart.class);
         query.setFirstResult(start);
         query.setMaxResults(size);
         return query.getResultList();
+    }
+
+    @Override
+    public void createOrder(List<Long> ids) {
+        Session session = getSession();
+        ShopOrder order = new ShopOrder();
+        Date now = new Date();
+        order.setCreatedAt(now);
+        order.setUpdatedAt(now);
+        session.persist(order);
+        Query query = session.createQuery("update cart c set c.order=:order where c.id in :ids AND c.order is null");
+        query.setParameter("order", order);
+        query.setParameterList("ids", ids);
+        query.executeUpdate();
     }
 }
