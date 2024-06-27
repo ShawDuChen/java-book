@@ -4,11 +4,14 @@
 
 <struts>
     <constant name="struts.devMode" value="true"/>
+    <constant name="struts.date.format" value="yyyy-MM-dd HH:mm:ss" />
     <package name="default" namespace="/" extends="struts-default, json-default">
         <interceptors>
             <interceptor name="json" class="org.apache.struts2.json.JSONInterceptor"/>
             <interceptor-stack name="jsonStack">
-                <interceptor-ref name="json"/>
+                <interceptor-ref name="json">
+                    <param name="dateFormatter">yyyy-MM-dd HH:mm:ss</param>
+                </interceptor-ref>
                 <interceptor-ref name="defaultStack"/>
             </interceptor-stack>
         </interceptors>

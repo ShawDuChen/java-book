@@ -1,5 +1,7 @@
 package com.model;
 
+import org.apache.struts2.json.annotations.JSON;
+
 import javax.persistence.*;
 import java.util.Date;
 
@@ -99,15 +101,19 @@ public class User {
     public void setStatus(int status) {
         this.status = status;
     }
+    @JSON(format = "yyyy-MM-dd HH:mm:ss")
     public Date getCreatedAt() {
         return createdAt;
     }
+    @JSON(format = "yyyy-MM-dd HH:mm:ss")
     public void setCreatedAt(Date createdAt) {
         this.createdAt = createdAt;
     }
+    @JSON(format = "yyyy-MM-dd HH:mm:ss")
     public Date getUpdatedAt() {
         return updatedAt;
     }
+    @JSON(format = "yyyy-MM-dd HH:mm:ss")
     public void setUpdatedAt(Date updatedAt) {
         this.updatedAt = updatedAt;
     }

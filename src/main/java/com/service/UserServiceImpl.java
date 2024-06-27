@@ -25,7 +25,7 @@ public class UserServiceImpl implements UserService{
 
     @Override
     public User login(User user) {
-        return (User) getSession().createQuery("FROM User WHERE username = :username AND password = :password")
+        return (User) getSession().createQuery("FROM user WHERE username = :username AND password = :password")
                 .setParameter("username", user.getUsername())
                 .setParameter("password", user.getPassword())
                 .uniqueResult();
