@@ -38,6 +38,9 @@ public class UserServiceImpl implements UserService{
         User result = (User) session.createQuery("FROM user WHERE username = :username")
                 .setParameter("username", user.getUsername())
                 .uniqueResult();
+        if (result == null) {
+            return null;
+        }
         Boolean checkIn = BCryptHandle.verify(user.getPassword(), result.getPassword());
         if (!checkIn) {
             return null;

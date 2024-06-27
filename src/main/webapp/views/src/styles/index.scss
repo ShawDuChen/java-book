@@ -1,0 +1,27 @@
+@import "normalize.css/normalize.css";
+@import "element-plus/theme-chalk/src/index.scss";
+
+.container {
+  height: calc(100vh);
+  overflow: hidden;
+}
+
+.content {
+  height: calc(100vh - 60px);
+}
+
+.flex-center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.flex-between {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.w-full {
+  width: 100%;
+}
