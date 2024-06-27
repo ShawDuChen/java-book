@@ -40,7 +40,9 @@ public class LoginAction extends BaseActionSupport<User> implements ModelDriven<
         }
     }
 
-    @Action(value = "register")
+    @Action(value = "register", interceptorRefs = {
+            @InterceptorRef("json")
+    })
     public String register() throws Exception {
         userService.register(getModel());
         return SUCCESS;

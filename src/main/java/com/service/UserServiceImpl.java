@@ -1,6 +1,7 @@
 package com.service;
 
 import com.model.User;
+import com.utils.BCryptHandle;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,14 +21,21 @@ public class UserServiceImpl implements UserService{
 
     @Override
     public void register(User user) {
+        String password = user.getPassword();
+        String encodePassword = BCryptHandle.encrypt(password);
+        user.setPassword(encodePassword);
         getSession().save(user);
     }
 
     @Override
     public User login(User user) {
-        return (User) getSession().createQuery("FROM user WHERE username = :username AND password = :password")
+        User result = (User) getSession().createQuery("FROM user WHERE username = :username")
                 .setParameter("username", user.getUsername())
-                .setParameter("password", user.getPassword())
                 .uniqueResult();
+        Boolean checkIn = BCryptHandle.verify(user.getPassword(), result.getPassword());
+        if (!checkIn) {
+            return null;
+        }
+        return result;
     }
 }
