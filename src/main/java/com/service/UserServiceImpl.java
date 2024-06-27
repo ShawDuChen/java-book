@@ -4,10 +4,13 @@ import com.model.User;
 import com.utils.BCryptHandle;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.query.Query;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.Date;
+import java.util.List;
 
 @Service
 @Transactional
@@ -21,21 +24,64 @@ public class UserServiceImpl implements UserService{
 
     @Override
     public void register(User user) {
+        Session session = getSession();
         String password = user.getPassword();
         String encodePassword = BCryptHandle.encrypt(password);
         user.setPassword(encodePassword);
-        getSession().save(user);
+        user.setCreatedAt(new Date());
+        session.save(user);
     }
 
     @Override
     public User login(User user) {
-        User result = (User) getSession().createQuery("FROM user WHERE username = :username")
+        Session session = getSession();
+        User result = (User) session.createQuery("FROM user WHERE username = :username")
                 .setParameter("username", user.getUsername())
                 .uniqueResult();
         Boolean checkIn = BCryptHandle.verify(user.getPassword(), result.getPassword());
         if (!checkIn) {
             return null;
         }
+        return result;
+    }
+
+    @Override
+    public void add(User user) {
+        register(user);
+    }
+
+    @Override
+    public void update(User user) {
+        Session session = getSession();
+        user.setUpdatedAt(new Date());
+        String password = BCryptHandle.encrypt(user.getPassword());
+        user.setPassword(password);
+        session.update(user);
+    }
+
+    @Override
+    public void delete(long id) {
+        Session session = getSession();
+        User user = (User) session.get(User.class, id);
+        session.delete(user);
+    }
+
+    @Override
+    public List<User> search(int page, int size) {
+        int start = (page - 1) * size;
+        Session session = getSession();
+        Query query = session.createQuery("from user order by createdAt");
+        query.setFirstResult(start);
+        query.setMaxResults(size);
+        List<User> result = query.list();
+        return result;
+    }
+
+    @Override
+    public List<User> getAll() {
+        Session session = getSession();
+        Query query = session.createQuery("from user");
+        List<User> result = query.list();
         return result;
     }
 }

@@ -1,4 +1,5 @@
 package com.utils;
+import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionSupport;
 
 import java.lang.reflect.ParameterizedType;
@@ -53,5 +54,9 @@ public class BaseActionSupport<T> extends ActionSupport {
         setData(null);
         setCode(500);
         setMessage(ERROR);
+    }
+
+    public String getQuery(String key) {
+        return ActionContext.getContext().getParameters().get(key).toString();
     }
 }

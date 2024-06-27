@@ -8,7 +8,7 @@ import org.apache.struts2.convention.annotation.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-@Namespace("/")
+@Namespace("/auth")
 @ParentPackage("json-default")
 @Results({
         @Result(name = "success", type = "json", params = {
@@ -44,8 +44,14 @@ public class LoginAction extends BaseActionSupport<User> implements ModelDriven<
             @InterceptorRef("json")
     })
     public String register() throws Exception {
-        userService.register(getModel());
-        return SUCCESS;
+        try {
+            userService.register(getModel());
+            actionSuccess(getModel());
+            return SUCCESS;
+        } catch (Exception e) {
+            actionError();
+            return ERROR;
+        }
     }
 
     @Override
