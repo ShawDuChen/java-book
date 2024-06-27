@@ -23,6 +23,7 @@ public class Product {
     @Column(nullable = false)
     private double price = 0;
 
+    @Transient
     private long categoryId; // 非数据库列，用于创建/更新
 
     @ManyToOne
