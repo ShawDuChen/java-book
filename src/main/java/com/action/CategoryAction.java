@@ -1,8 +1,8 @@
 package com.action;
 
-import com.model.User;
+import com.model.Category;
 import com.opensymphony.xwork2.ModelDriven;
-import com.service.UserService;
+import com.service.CategoryService;
 import com.utils.BaseActionSupport;
 import org.apache.struts2.convention.annotation.*;
 import org.hibernate.HibernateException;
@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.List;
 
-@Namespace("/user")
+@Namespace("/category")
 @ParentPackage("json-default")
 @Results({
         @Result(name = "success", type = "json", params = {
@@ -27,23 +27,27 @@ import java.util.List;
         @InterceptorRef("json")
 })
 @Component
-public class UserAction extends BaseActionSupport<User> implements ModelDriven<User> {
+public class CategoryAction extends BaseActionSupport<Category> implements ModelDriven<Category> {
     @Autowired
-    private UserService userService;
-    private User model = new User();
-    private List<User> list;
+    private CategoryService categoryService;
+    private Category model = new Category();
+    private List<Category> list;
 
-    public void setList(List<User> list) {
+    public void setList(List<Category> list) {
         this.list = list;
     }
 
-    public List<User> getList() {
+    public List<Category> getList() {
         return list;
     }
 
     @Override
-    public String getMessage() {
-        return super.getMessage();
+    public Category getModel() {
+        return model;
+    }
+
+    public void setModel(Category model) {
+        this.model = model;
     }
 
     @Override
@@ -52,17 +56,13 @@ public class UserAction extends BaseActionSupport<User> implements ModelDriven<U
     }
 
     @Override
-    public User getData() {
-        return super.getData();
+    public String getMessage() {
+        return super.getMessage();
     }
 
     @Override
-    public User getModel() {
-        return model;
-    }
-
-    public void setModel(User model) {
-        this.model = model;
+    public Category getData() {
+        return super.getData();
     }
 
     @Action(value = "all", results = {
@@ -73,59 +73,9 @@ public class UserAction extends BaseActionSupport<User> implements ModelDriven<U
     })
     public String getAll() {
         try {
-            List<User> _list = userService.getAll();
+            List<Category> _list = categoryService.getAll();
+            actionSuccess(null);
             setList(_list);
-            actionSuccess(null);
-            return SUCCESS;
-        } catch (HibernateException e) {
-            actionError();
-            return ERROR;
-        }
-    }
-
-    @Action(value = "get")
-    public String getById() {
-        try {
-            User user = userService.findById(Integer.parseInt(getQuery("id")));
-            actionSuccess(user);
-            return SUCCESS;
-        } catch (HibernateException e) {
-            actionError();
-            return ERROR;
-        }
-    }
-
-    @Action(value = "create")
-    public String create() {
-        try {
-            User user = getModel();
-            userService.add(user);
-            actionSuccess(user);
-            return SUCCESS;
-        } catch (HibernateException e) {
-            actionError();
-            return ERROR;
-        }
-    }
-
-    @Action(value = "update")
-    public String update() {
-        try {
-            User user = getModel();
-            userService.update(user);
-            actionSuccess(user);
-            return SUCCESS;
-        } catch (HibernateException e) {
-            actionError();
-            return ERROR;
-        }
-    }
-
-    @Action(value = "delete")
-    public String delete() {
-        try {
-            userService.delete(Long.parseLong(getQuery("id")));
-            actionSuccess(null);
             return SUCCESS;
         } catch (HibernateException e) {
             actionError();
@@ -143,7 +93,7 @@ public class UserAction extends BaseActionSupport<User> implements ModelDriven<U
         try {
             int page = Integer.parseInt(getQuery("page"));
             int limit = Integer.parseInt(getQuery("limit"));
-            List<User> _list = userService.search(page, limit);
+            List<Category> _list = categoryService.search(page, limit);
             setList(_list);
             actionSuccess(null);
             return SUCCESS;
@@ -153,4 +103,55 @@ public class UserAction extends BaseActionSupport<User> implements ModelDriven<U
         }
     }
 
+    @Action(value = "get")
+    public String findById() {
+        try {
+            long id = Long.parseLong(getQuery("id"));
+            Category category = categoryService.findById(id);
+            actionSuccess(category);
+            return SUCCESS;
+        } catch (HibernateException e) {
+            actionError();
+            return ERROR;
+        }
+    }
+
+    @Action(value = "create")
+    public String create() {
+        try {
+            Category model = getModel();
+            categoryService.add(model);
+            actionSuccess(model);
+            return SUCCESS;
+        } catch (HibernateException e) {
+            actionError();
+            return ERROR;
+        }
+    }
+
+    @Action(value = "update")
+    public String update() {
+        try {
+            Category model = getModel();
+            categoryService.update(model);
+            actionSuccess(model);
+            return SUCCESS;
+        } catch (HibernateException e) {
+            actionError();
+            return ERROR;
+        }
+    }
+
+    @Action(value = "delete")
+    public String delete() {
+        try {
+            long id = Long.parseLong(getQuery("id"));
+            categoryService.delete(id);
+            actionSuccess(null);
+            return SUCCESS;
+        } catch (HibernateException e) {
+            actionError();
+            return ERROR;
+        }
+    }
 }

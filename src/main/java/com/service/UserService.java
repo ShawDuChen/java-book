@@ -10,6 +10,7 @@ public interface UserService {
     void add(User user);
     void update(User user);
     void delete(long id);
+    User findById(long id);
     List<User> search(int page, int size);
     List<User> getAll();
 }
