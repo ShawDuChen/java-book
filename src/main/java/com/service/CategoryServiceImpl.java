@@ -52,13 +52,8 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     public List<Category> getAll(String name) {
         Session session = getSession();
-        Query<Category> query = null;
-        if (name == null || name.isEmpty()) {
-            query = session.createQuery("from category ORDER BY createdAt desc", Category.class);
-        } else {
-            query = session.createQuery("from category where name like :name ORDER BY createdAt desc", Category.class);
-            query.setParameter("name", "%"+ name + "%");
-        }
+        Query<Category> query = session.createQuery("from category where (name is null or name like :name) order by createdAt", Category.class);
+        query.setParameter("name", "%"+ (name != null ? name : "") + "%");
         return query.getResultList();
     }
 

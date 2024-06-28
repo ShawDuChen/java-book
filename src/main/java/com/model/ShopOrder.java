@@ -18,7 +18,7 @@ public class ShopOrder {
     @Transient
     private long userId;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id")
     private User user;
 

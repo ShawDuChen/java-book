@@ -82,13 +82,8 @@ public class UserServiceImpl implements UserService{
     @Override
     public List<User> getAll(String username) {
         Session session = getSession();
-        Query<User> query = null;
-        if (username == null || username.isEmpty()) {
-            query = session.createQuery("from user order by createdAt desc", User.class);
-        } else {
-            query = session.createQuery("from user where username like :username order by createdAt desc", User.class);
-            query.setParameter("username", "%" + username + "%");
-        }
+        Query<User> query = session.createQuery("from user where (username is null or username like :username) order by createdAt desc", User.class);
+        query.setParameter("username", "%" +(username != null ? username : "") + "%");
         return query.getResultList();
     }
 

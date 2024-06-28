@@ -1,13 +1,11 @@
 import request from '@/utils/request'
 import { Product } from 'app'
 
-export const fetchAll = (name?: string) => {
+export const fetchAll = (params?: Partial<Product>) => {
   return request<Product>({
     url: '/product/all',
     method: 'get',
-    params: {
-      name
-    }
+    params: params
   })
 }
 

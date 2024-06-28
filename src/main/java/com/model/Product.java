@@ -26,7 +26,7 @@ public class Product {
     @Transient
     private long categoryId; // 非数据库列，用于创建/更新
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "category_id")
     private Category category;
 

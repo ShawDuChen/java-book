@@ -17,7 +17,7 @@ const { bool: loading, toggle } = useBool()
 const queryForm = reactive<Partial<Product>>({})
 
 const getList = () => {
-  fetchAll(queryForm.name).then(res => {
+  fetchAll(queryForm).then(res => {
     list.value = res.list || [];
   })
 }
@@ -90,15 +90,20 @@ onMounted(() => {
       <el-form-item prop="name">
         <el-input v-model="queryForm.name" placeholder="商品名" clearable />
       </el-form-item>
+      <el-form-item prop="categoryId">
+        <el-select v-model="queryForm.categoryId" placeholder="商品分类" clearable style="width: 120px;">
+          <el-option v-for="item in categories" :key="item.id" :label="item.name" :value="item.id" />
+        </el-select>
+      </el-form-item>
       <el-form-item>
         <el-button type="primary" @click="getList">查询</el-button>
-        <el-button type="success" @click="handleEdit({})">新增</el-button>
+        <el-button type="success" @click="handleEdit({ price: 1.00 })">新增</el-button>
       </el-form-item>
     </el-form>
     <el-table :data="list" border>
       <el-table-column prop="name" label="商品名称" align="center" />
       <el-table-column prop="code" label="商品标识" align="center" />
-      <el-table-column prop="price" label="商品标识" align="center">
+      <el-table-column prop="price" label="商品单价" align="center">
         <template #default="{ row }">
           <el-tag type="danger">￥{{ row.price }}</el-tag>
         </template>
@@ -112,7 +117,7 @@ onMounted(() => {
       <el-table-column prop="sellCount" label="商品销量" align="center" />
       <el-table-column prop="createdAt" label="创建时间" align="center" />
       <el-table-column prop="updatedAt" label="更新时间" align="center" />
-      <el-table-column prop="action" label="操作" align="center">
+      <el-table-column prop="action" label="操作" align="center" min-width="120px">
         <template #default="{ row }">
           <el-button type="primary" link @click="handleEdit(row)">编辑</el-button>
           <el-button type="danger" link @click="handleDelete(row.id)">删除</el-button>

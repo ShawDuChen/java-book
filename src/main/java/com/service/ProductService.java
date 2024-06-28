@@ -9,7 +9,7 @@ public interface ProductService {
     public void update(Product product);
     public void delete(long id);
     public Product findById(long id);
-    public List<Product> getAll(String name);
+    public List<Product> getAll(String name, String categoryId);
     public List<Product> search(int page, int size);
     public List<Product> getHots();
 }

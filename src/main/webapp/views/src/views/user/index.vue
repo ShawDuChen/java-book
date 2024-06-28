@@ -108,7 +108,7 @@ onMounted(() => {
       </el-table-column>
       <el-table-column prop="createdAt" label="创建时间" align="center" />
       <el-table-column prop="updatedAt" label="更新时间" align="center" />
-      <el-table-column prop="action" label="操作" align="center">
+      <el-table-column prop="action" label="操作" align="center" min-width="120px">
         <template #default="{ row }">
           <el-button type="primary" link @click="handleEdit(row)">编辑</el-button>
           <el-button type="danger" link @click="handleDelete(row.id)">删除</el-button>

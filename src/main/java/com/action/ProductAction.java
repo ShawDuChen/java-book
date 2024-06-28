@@ -73,7 +73,7 @@ public class ProductAction extends BaseActionSupport<Product> implements ModelDr
     })
     public String getAll() {
         try {
-            List<Product> _list = productService.getAll(getQuery("name"));
+            List<Product> _list = productService.getAll(getQuery("name"), getQuery("categoryId"));
             actionSuccess(null);
             setList(_list);
             return SUCCESS;
