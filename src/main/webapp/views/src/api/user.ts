@@ -1,10 +1,13 @@
 import request from '@/utils/request'
 import { User } from 'app'
 
-export const fetchAll = () => {
+export const fetchAll = (username?: string) => {
   return request<User>({
     url: '/user/all',
-    method: 'get'
+    method: 'get',
+    params: {
+      username
+    }
   })
 }
 

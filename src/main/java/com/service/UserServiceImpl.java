@@ -73,16 +73,22 @@ public class UserServiceImpl implements UserService{
     public List<User> search(int page, int size) {
         int start = (page - 1) * size;
         Session session = getSession();
-        Query<User> query = session.createQuery("from user order by createdAt", User.class);
+        Query<User> query = session.createQuery("from user order by createdAt desc", User.class);
         query.setFirstResult(start);
         query.setMaxResults(size);
         return query.getResultList();
     }
 
     @Override
-    public List<User> getAll() {
+    public List<User> getAll(String username) {
         Session session = getSession();
-        Query<User> query = session.createQuery("from user", User.class);
+        Query<User> query = null;
+        if (username == null || username.isEmpty()) {
+            query = session.createQuery("from user order by createdAt desc", User.class);
+        } else {
+            query = session.createQuery("from user where username like :username order by createdAt desc", User.class);
+            query.setParameter("username", "%" + username + "%");
+        }
         return query.getResultList();
     }
 

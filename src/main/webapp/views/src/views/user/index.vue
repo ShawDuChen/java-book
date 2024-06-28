@@ -7,14 +7,16 @@ import {
   ElForm, ElFormItem, ElInput, ElSelect, ElOption,
   FormInstance
 } from 'element-plus'
-import { onMounted, ref } from 'vue';
+import { onMounted, reactive, ref } from 'vue';
 import { cloneDeep } from 'lodash'
 
 const list = ref<Array<Partial<User>>>([])
 const { bool: loading, toggle } = useBool()
 
+const queryForm = reactive<Partial<User>>({})
+
 const getList = () => {
-  fetchAll().then(res => {
+  fetchAll(queryForm.username).then(res => {
     list.value = res.list || [];
   })
 }
@@ -22,6 +24,7 @@ const getList = () => {
 const handleEdit = (row: Partial<User>)=> {
   formData.value = cloneDeep(row);
   toggleVisible();
+  formRef.value?.resetFields();
 }
 const handleDelete = (id: number) => {
   ElMessageBox.confirm('确定删除吗？', '提示', {type:'warning'})
@@ -68,16 +71,13 @@ const create = (data: Partial<User>) => {
 onMounted(() => {
   getList()
 })
-
-const queryForm = ref<Partial<User>>({})
-
 </script>
 
 <template>
   <div v-loading="loading">
     <el-form inline>
       <el-form-item prop="username">
-        <el-input v-model="queryForm.username" placeholder="用户名" />
+        <el-input v-model="queryForm.username" placeholder="用户名" clearable />
       </el-form-item>
       <el-form-item>
         <el-button type="primary" @click="getList">查询</el-button>

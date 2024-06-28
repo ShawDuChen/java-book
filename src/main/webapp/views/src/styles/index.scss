@@ -57,3 +57,12 @@
 .text-left {
   text-align: left;
 }
+
+.space-y-4 {
+  > * {
+    margin-bottom: 12px;
+  }
+  :last-child {
+    margin-bottom: 0px;
+  }
+}

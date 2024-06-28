@@ -64,9 +64,15 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public List<Product> getAll() {
+    public List<Product> getAll(String name) {
         Session session = getSession();
-        Query<Product> query = session.createQuery("from product ORDER BY createdAt desc", Product.class);
+        Query<Product> query = null;
+        if (name == null || name.isEmpty()) {
+            query = session.createQuery("from product ORDER BY createdAt desc", Product.class);
+        } else {
+            query = session.createQuery("from product where name like :name ORDER BY createdAt desc", Product.class);
+            query.setParameter("name", "%" + name + "%");
+        }
         List<Product> result = query.getResultList();
         Map<Long, Integer> map = getProductSellCountMap(session);
         formatResult(result, map);

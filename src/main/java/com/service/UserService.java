@@ -12,5 +12,5 @@ public interface UserService {
     void delete(long id);
     User findById(long id);
     List<User> search(int page, int size);
-    List<User> getAll();
+    List<User> getAll(String username);
 }

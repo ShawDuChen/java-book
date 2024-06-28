@@ -1,10 +1,13 @@
 import request from '@/utils/request'
 import { Product } from 'app'
 
-export const fetchAll = () => {
+export const fetchAll = (name?: string) => {
   return request<Product>({
     url: '/product/all',
-    method: 'get'
+    method: 'get',
+    params: {
+      name
+    }
   })
 }
 

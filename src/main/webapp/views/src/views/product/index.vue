@@ -8,14 +8,16 @@ import {
   ElForm, ElFormItem, ElInput, ElSelect, ElOption, ElInputNumber,
   FormInstance, ElTag
 } from 'element-plus'
-import { onMounted, ref } from 'vue';
+import { onMounted, reactive, ref } from 'vue';
 import { cloneDeep } from 'lodash'
 
 const list = ref<Array<Partial<Product>>>([])
 const { bool: loading, toggle } = useBool()
 
+const queryForm = reactive<Partial<Product>>({})
+
 const getList = () => {
-  fetchAll().then(res => {
+  fetchAll(queryForm.name).then(res => {
     list.value = res.list || [];
   })
 }
@@ -80,15 +82,13 @@ onMounted(() => {
   fetchCategorys()
 })
 
-const queryForm = ref<Partial<Product>>({})
-
 </script>
 
 <template>
   <div v-loading="loading">
     <el-form inline>
       <el-form-item prop="name">
-        <el-input v-model="queryForm.name" placeholder="商品名" />
+        <el-input v-model="queryForm.name" placeholder="商品名" clearable />
       </el-form-item>
       <el-form-item>
         <el-button type="primary" @click="getList">查询</el-button>

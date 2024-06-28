@@ -73,7 +73,7 @@ public class UserAction extends BaseActionSupport<User> implements ModelDriven<U
     })
     public String getAll() {
         try {
-            List<User> _list = userService.getAll();
+            List<User> _list = userService.getAll(getQuery("username"));
             setList(_list);
             actionSuccess(null);
             return SUCCESS;

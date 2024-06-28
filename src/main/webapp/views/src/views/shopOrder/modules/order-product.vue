@@ -10,9 +10,9 @@ const props = defineProps<{
 
 <template>
   <div v-if="!props.data?.length">订单无商品</div>
-  <ul v-else>
-    <li v-for="item in props.data" :key="item.id">
+  <div v-else class="space-y-4">
+    <div v-for="item in props.data" :key="item.id">
       <el-tag type="primary">商品: {{ item.product?.name }} ￥{{ item.product?.price || 0 }} * {{ item.count }}</el-tag>
-    </li>
-  </ul>
+    </div>
+  </div>
 </template>
