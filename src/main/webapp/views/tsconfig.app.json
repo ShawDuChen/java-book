@@ -23,12 +23,12 @@
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true,
 
-    // "baseUrl": "./",
+    "baseUrl": "./",
     "paths": {
       "@/*": ["./src/*"]
     },
 
     "types": ["element-plus/global.d.ts"]
   },
-  "include": ["src/**/*.ts", "src/**/*.tsx", "src/**/*.vue"]
+  "include": ["./src/**/*.ts", "./src/**/*.tsx", "./src/**/*.vue"]
 }

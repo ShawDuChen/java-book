@@ -9,9 +9,10 @@ import { cacheUser } from '@/utils/cache';
 
 const formRef = ref<FormInstance>()
 
-const formData = ref<Partial<User>>({
+const formData = ref<Partial<User & { type: number }>>({
   username:'shaw',
-  password:'shawduchen'
+  password:'shawduchen',
+  type: 1
 })
 
 const router = useRouter();
@@ -21,10 +22,11 @@ const store = useStore()
 const toLogin = () => {
   formRef.value?.validate((valid) => {
     if (valid) {
-      login(formData.value).then((res) => {
+      const data = formData.value;
+      login(data).then((res) => {
         store.updateUser(res.data);
         cacheUser(res.data);
-        router.push('/user')
+        router.push(data.type === 1 ? '/user' : '/c/dashboard')
       })
     }
   })
@@ -41,6 +43,12 @@ const toLogin = () => {
         </el-form-item>
         <el-form-item prop="password" label="用户密码" :rules="[{ required: true, message: '请输入用户密码' }]">
           <el-input v-model="formData.password" type="password" autocomplete="off" clearable></el-input>
+        </el-form-item>
+        <el-form-item prop="type" label="登录平台">
+          <el-radio-group v-model="formData.type">
+            <el-radio :value="1">管理后台</el-radio>
+            <el-radio :value="2">购物平台</el-radio>
+          </el-radio-group>
         </el-form-item>
         <el-form-item>
           <el-button type="primary" class="w-full" @click="toLogin">登录</el-button>

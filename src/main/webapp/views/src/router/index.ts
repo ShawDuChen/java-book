@@ -1,5 +1,6 @@
 import { createRouter, createWebHashHistory } from 'vue-router'
-import Layout from '@/layout/index.vue'
+import Layout from '@/layout/index.vue';
+import ClientLayout from '@/layout/client-layout.vue';
 import { registerGuard } from './guard';
 
 const router = createRouter({
@@ -29,6 +30,17 @@ const router = createRouter({
         {
           path: 'profile',
           component: () => import('@/views/user/profile.vue')
+        }
+      ]
+    },
+    {
+      path: '/c',
+      component: ClientLayout,
+      redirect: '/c/dashboard',
+      children: [
+        {
+          path: 'dashboard',
+          component: () => import('@/views/client/dashboard/index.vue')
         }
       ]
     },

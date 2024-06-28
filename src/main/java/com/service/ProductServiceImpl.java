@@ -58,7 +58,14 @@ public class ProductServiceImpl implements ProductService {
     public List<Product> getAll() {
         Session session = getSession();
         Query<Product> query = session.createQuery("from product ORDER BY createdAt desc", Product.class);
-        return query.getResultList();
+        List<Product> result = query.getResultList();
+        for (Product product : result) {
+            Category category = product.getCategory();
+            if (category != null) {
+                product.setCategoryId(category.getId());
+            }
+        }
+        return result;
     }
 
     @Override
@@ -68,6 +75,13 @@ public class ProductServiceImpl implements ProductService {
         Query<Product> query = session.createQuery("from product order by createdAt", Product.class);
         query.setFirstResult(start);
         query.setMaxResults(size);
-        return query.getResultList();
+        List<Product> result = query.getResultList();
+        for (Product product : result) {
+            Category category = product.getCategory();
+            if (category != null) {
+                product.setCategoryId(category.getId());
+            }
+        }
+        return result;
     }
 }
