@@ -49,3 +49,20 @@ export const getProduct = (id: number) => {
   })
 }
 
+export const fetchNewList = (page = 1, limit = 20) => {
+  return request<Product>({
+    url: '/product/list',
+    method: 'get',
+    params: {
+      page,
+      limit
+    }
+  })
+}
+
+export const fetchHotList = () => {
+  return request<Product>({
+    url: '/product/hotList',
+    method: 'get'
+  })
+}

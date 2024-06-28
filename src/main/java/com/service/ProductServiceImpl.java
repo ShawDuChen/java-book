@@ -80,7 +80,7 @@ public class ProductServiceImpl implements ProductService {
     public List<Product> search(int page, int size) {
         int start = (page - 1) * size;
         Session session = getSession();
-        Query<Product> query = session.createQuery("from product order by createdAt", Product.class);
+        Query<Product> query = session.createQuery("from product order by createdAt desc", Product.class);
         query.setFirstResult(start);
         query.setMaxResults(size);
         List<Product> result = query.getResultList();
@@ -94,7 +94,7 @@ public class ProductServiceImpl implements ProductService {
         Session session = getSession();
         Query query = session.createQuery("select c.product, count(c) from cart c where c.order is not null group by c.product");
         query.setFirstResult(0);
-        query.setMaxResults(10);
+        query.setMaxResults(20);
         List<Object[]> carts = query.getResultList();
         List<Long> ids = new ArrayList<>();
         for (Object[] row : carts) {
