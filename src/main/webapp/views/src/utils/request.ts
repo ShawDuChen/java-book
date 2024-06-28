@@ -6,6 +6,7 @@ export interface ResponseData<T = null> {
   code: number
   message: string
   data: T
+  list?: T[]
 }
 
 const serve = axios.create({
