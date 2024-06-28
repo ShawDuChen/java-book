@@ -38,9 +38,12 @@ public class Product {
     @Temporal(TemporalType.TIMESTAMP)
     private Date updatedAt;
 
+    @Transient
+    private int sellCount = 0;
+
     public Product() {}
 
-    public Product(String name, String code, String description, double price, long categoryId, Category category, Date createdAt, Date updatedAt) {
+    public Product(String name, String code, String description, double price, long categoryId, Category category, Date createdAt, Date updatedAt, int sellCount) {
         this.name = name;
         this.code = code;
         this.description = description;
@@ -49,6 +52,7 @@ public class Product {
         this.category = category;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
+        this.sellCount = sellCount;
     }
 
     public long getId() {
@@ -117,5 +121,13 @@ public class Product {
     @JSON(format = "yyyy-MM-dd HH:mm:ss")
     public void setUpdatedAt(Date updatedAt) {
         this.updatedAt = updatedAt;
+    }
+
+    public int getSellCount() {
+        return sellCount;
+    }
+
+    public void setSellCount(int sellCount) {
+        this.sellCount = sellCount;
     }
 }

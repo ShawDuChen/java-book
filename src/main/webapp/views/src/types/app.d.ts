@@ -33,6 +33,7 @@ declare module 'app' {
     createdAt: string;
     updatedAt: string;
     category?: Category;
+    sellCount: number;
   }
 
   interface Cart {

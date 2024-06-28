@@ -154,4 +154,22 @@ public class ProductAction extends BaseActionSupport<Product> implements ModelDr
             return ERROR;
         }
     }
+
+    @Action(value = "hotList", results = {
+            @Result(name = "success", type = "json", params = {
+                    "includeProperties", "list.*, code, message",
+                    "excludeProperties", "model"
+            }),
+    })
+    public String getHotList() {
+        try {
+            List<Product> _list = productService.getHots();
+            setList(_list);
+            actionSuccess(null);
+            return SUCCESS;
+        } catch (HibernateException e) {
+            actionError();
+            return ERROR;
+        }
+    }
 }

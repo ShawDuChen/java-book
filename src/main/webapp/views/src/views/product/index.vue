@@ -109,6 +109,7 @@ const queryForm = ref<Partial<Product>>({})
           <el-tag type="primary">{{ row.category?.name }}</el-tag>
         </template>
       </el-table-column>
+      <el-table-column prop="sellCount" label="商品销量" align="center" />
       <el-table-column prop="createdAt" label="创建时间" align="center" />
       <el-table-column prop="updatedAt" label="更新时间" align="center" />
       <el-table-column prop="action" label="操作" align="center">

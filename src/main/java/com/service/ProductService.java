@@ -11,4 +11,5 @@ public interface ProductService {
     public Product findById(long id);
     public List<Product> getAll();
     public List<Product> search(int page, int size);
+    public List<Product> getHots();
 }
