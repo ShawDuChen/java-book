@@ -10,6 +10,19 @@
   height: calc(100vh - 60px);
 }
 
+.app-header {
+  height: 60px;
+  padding: 0;
+  border-bottom: 1px solid #dcdfe6;
+}
+
+.app-menu {
+  border-right: 1px solid #dcdfe6;
+  .el-menu {
+    border-right: none;
+  }
+}
+
 .flex-center {
   display: flex;
   justify-content: center;
@@ -22,6 +35,13 @@
   align-items: center;
 }
 
+.flex {
+  display: flex;
+}
+
 .w-full {
   width: 100%;
+}
+.pointer {
+  cursor: pointer;
 }

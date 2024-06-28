@@ -3,10 +3,11 @@ import { ref } from 'vue'
 import { FormInstance } from 'element-plus'
 import { login } from '@/api/auth';
 import { useRouter, RouterLink } from 'vue-router';
+import { User } from 'app';
 
 const formRef = ref<FormInstance>()
 
-const formData = ref<{ username: string; password: string }>({
+const formData = ref<Partial<User>>({
   username:'shaw',
   password:'shawduchen'
 })

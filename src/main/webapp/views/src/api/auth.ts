@@ -1,6 +1,7 @@
 import request from '@/utils/request'
+import { User } from 'app'
 
-export function login(data: any) {
+export function login(data: Partial<User>) {
   return request({
     url: '/auth/login',
     method: "post",
@@ -9,3 +10,14 @@ export function login(data: any) {
     }
   })
 }
+
+export function register(data: Partial<User>) {
+  return request({
+    url: '/auth/register',
+    method: "post",
+    data: {
+      model: data
+    }
+  })
+}
+ 
