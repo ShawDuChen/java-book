@@ -68,7 +68,22 @@ public class CartServiceImpl implements CartService {
     public List<Cart> getAll() {
         Session session = getSession();
         Query<Cart> query = session.createQuery("from cart c where c.order=null ORDER BY createdAt desc", Cart.class);
-        return query.getResultList();
+        List<Cart> result = query.getResultList();
+        for (Cart cart : result) {
+            User user = cart.getUser();
+            Product product = cart.getProduct();
+            ShopOrder order = cart.getOrder();
+            if (order != null) {
+                cart.setOrderId(order.getId());
+            }
+            if (product != null) {
+                cart.setProductId(product.getId());
+            }
+            if (user != null) {
+                cart.setUserId(user.getId());
+            }
+        }
+        return result;
     }
 
     @Override
@@ -78,13 +93,30 @@ public class CartServiceImpl implements CartService {
         Query<Cart> query = session.createQuery("from cart c where c.order=null order by createdAt", Cart.class);
         query.setFirstResult(start);
         query.setMaxResults(size);
-        return query.getResultList();
+        List<Cart> result = query.getResultList();
+        for (Cart cart : result) {
+            User user = cart.getUser();
+            Product product = cart.getProduct();
+            ShopOrder order = cart.getOrder();
+            if (order != null) {
+                cart.setOrderId(order.getId());
+            }
+            if (product != null) {
+                cart.setProductId(product.getId());
+            }
+            if (user != null) {
+                cart.setUserId(user.getId());
+            }
+        }
+        return result;
     }
 
     @Override
-    public void createOrder(List<Long> ids) {
+    public void createOrder(List<Long> ids, long userId) {
         Session session = getSession();
+        User user = session.get(User.class, userId);
         ShopOrder order = new ShopOrder();
+        order.setUser(user);
         Date now = new Date();
         order.setCreatedAt(now);
         order.setUpdatedAt(now);

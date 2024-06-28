@@ -33,6 +33,15 @@ public class CartAction extends BaseActionSupport<Cart> implements ModelDriven<C
     private Cart model = new Cart();
     private List<Cart> list;
     private List<Long> ids;
+    private long userId;
+
+    public void setUserId(long userId) {
+        this.userId = userId;
+    }
+
+    public long getUserId() {
+        return userId;
+    }
 
     public void setIds(List<Long> ids) {
         this.ids = ids;
@@ -167,7 +176,7 @@ public class CartAction extends BaseActionSupport<Cart> implements ModelDriven<C
     @Action("createOrder")
     public String createOrder() {
         try {
-            cartService.createOrder(getIds());
+            cartService.createOrder(getIds(), getUserId());
             actionSuccess(null);
             return SUCCESS;
         } catch (HibernateException e) {

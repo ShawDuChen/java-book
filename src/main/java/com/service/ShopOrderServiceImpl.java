@@ -1,6 +1,7 @@
 package com.service;
 
 import com.model.ShopOrder;
+import com.model.User;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.query.Query;
@@ -53,7 +54,14 @@ public class ShopOrderServiceImpl implements ShopOrderService {
     public List<ShopOrder> getAll() {
         Session session = getSession();
         Query<ShopOrder> query = session.createQuery("from shop_order ORDER BY createdAt desc", ShopOrder.class);
-        return query.getResultList();
+        List<ShopOrder> result = query.getResultList();
+        for (ShopOrder shopOrder : result) {
+            User user = shopOrder.getUser();
+            if (user != null) {
+                shopOrder.setUserId(user.getId());
+            }
+        }
+        return result;
     }
 
     @Override
@@ -63,6 +71,13 @@ public class ShopOrderServiceImpl implements ShopOrderService {
         Query<ShopOrder> query = session.createQuery("from shop_order order by createdAt", ShopOrder.class);
         query.setFirstResult(start);
         query.setMaxResults(size);
-        return query.getResultList();
+        List<ShopOrder> result = query.getResultList();
+        for (ShopOrder shopOrder : result) {
+            User user = shopOrder.getUser();
+            if (user != null) {
+                shopOrder.setUserId(user.getId());
+            }
+        }
+        return result;
     }
 }

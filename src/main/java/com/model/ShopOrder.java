@@ -15,6 +15,13 @@ public class ShopOrder {
     @OneToMany(mappedBy = "order", fetch = FetchType.EAGER)
     private List<Cart> carts;
 
+    @Transient
+    private long userId;
+
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
+
     @Column(name = "created_at")
     @Temporal(TemporalType.TIMESTAMP)
     private Date createdAt;
@@ -24,8 +31,10 @@ public class ShopOrder {
     private Date updatedAt;
 
     public ShopOrder() {}
-    public ShopOrder(List<Cart> carts, Date createdAt, Date updatedAt) {
+    public ShopOrder(List<Cart> carts, long userId, User user, Date createdAt, Date updatedAt) {
         this.carts = carts;
+        this.userId = userId;
+        this.user = user;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
     }
@@ -40,6 +49,18 @@ public class ShopOrder {
     }
     public void setCarts(List<Cart> carts) {
         this.carts = carts;
+    }
+    public long getUserId() {
+        return userId;
+    }
+    public void setUserId(long userId) {
+        this.userId = userId;
+    }
+    public User getUser() {
+        return user;
+    }
+    public void setUser(User user) {
+        this.user = user;
     }
     @JSON(format = "yyyy-MM-dd HH:mm:ss")
     public Date getCreatedAt() {
