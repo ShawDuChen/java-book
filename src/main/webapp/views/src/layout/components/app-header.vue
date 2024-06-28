@@ -1,9 +1,11 @@
 <script lang="ts" setup>
+import useStore from '@/store';
 import { ArrowDown, UserFilled } from '@element-plus/icons-vue'
 import { ElDropdown, ElDropdownItem, ElDropdownMenu, ElIcon, ElMessage, ElMessageBox } from 'element-plus'
 import { useRouter } from 'vue-router';
 
 const router = useRouter();
+const store = useStore();
 
 const onCommand = (command: "profile" | "logout") => {
   switch (command) {
@@ -32,7 +34,7 @@ const onCommand = (command: "profile" | "logout") => {
     <el-dropdown @command="onCommand">
       <span class="el-dropdown-link flex-center pointer">
         <el-icon><UserFilled /></el-icon>
-        <span>Dropdown</span>
+        <span>{{ store.user.username }}</span>
         <el-icon class="el-icon--right">
           <arrow-down />
         </el-icon>

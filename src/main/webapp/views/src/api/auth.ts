@@ -2,7 +2,7 @@ import request from '@/utils/request'
 import { User } from 'app'
 
 export function login(data: Partial<User>) {
-  return request({
+  return request<User>({
     url: '/auth/login',
     method: "post",
     data: {

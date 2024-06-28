@@ -1,5 +1,6 @@
 import { createRouter, createWebHashHistory } from 'vue-router'
 import Layout from '@/layout/index.vue'
+import { registerGuard } from './guard';
 
 const router = createRouter({
   history: createWebHashHistory(),
@@ -45,5 +46,7 @@ const router = createRouter({
     }
   ]
 })
+
+registerGuard(router);
 
 export default router;

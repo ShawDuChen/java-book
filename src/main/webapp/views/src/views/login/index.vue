@@ -4,6 +4,8 @@ import { FormInstance } from 'element-plus'
 import { login } from '@/api/auth';
 import { useRouter, RouterLink } from 'vue-router';
 import { User } from 'app';
+import useStore from '@/store';
+import { cacheUser } from '@/utils/cache';
 
 const formRef = ref<FormInstance>()
 
@@ -14,10 +16,14 @@ const formData = ref<Partial<User>>({
 
 const router = useRouter();
 
+const store = useStore()
+
 const toLogin = () => {
   formRef.value?.validate((valid) => {
     if (valid) {
-      login(formData.value).then(() => {
+      login(formData.value).then((res) => {
+        store.updateUser(res.data);
+        cacheUser(res.data);
         router.push('/user')
       })
     }

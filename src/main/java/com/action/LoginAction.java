@@ -30,8 +30,8 @@ public class LoginAction extends BaseActionSupport<User> implements ModelDriven<
             @InterceptorRef("json")
     })
     public String execute() throws Exception {
-        User user = getModel();
-        if (userService.login(user) != null) {
+        User user = userService.login(getModel());
+        if (user != null) {
             actionSuccess(user);
             return SUCCESS;
         } else {
