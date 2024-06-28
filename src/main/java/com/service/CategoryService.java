@@ -9,6 +9,6 @@ public interface CategoryService {
     public void update(Category category);
     public void delete(long id);
     public Category findById(long id);
-    public List<Category> getAll();
+    public List<Category> getAll(String name);
     public List<Category> search(int page, int size);
 }

@@ -73,7 +73,8 @@ public class CategoryAction extends BaseActionSupport<Category> implements Model
     })
     public String getAll() {
         try {
-            List<Category> _list = categoryService.getAll();
+            String name = getQuery("name");
+            List<Category> _list = categoryService.getAll(name);
             actionSuccess(null);
             setList(_list);
             return SUCCESS;

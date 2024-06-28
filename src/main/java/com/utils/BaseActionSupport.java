@@ -1,6 +1,7 @@
 package com.utils;
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionSupport;
+import org.apache.struts2.dispatcher.Parameter;
 
 import java.lang.reflect.ParameterizedType;
 
@@ -57,6 +58,7 @@ public class BaseActionSupport<T> extends ActionSupport {
     }
 
     public String getQuery(String key) {
-        return ActionContext.getContext().getParameters().get(key).toString();
+        Parameter parameter = ActionContext.getContext().getParameters().get(key);
+        return parameter.getValue();
     }
 }

@@ -7,14 +7,16 @@ import {
   ElForm, ElFormItem, ElInput, ElSelect, ElOption,
   FormInstance
 } from 'element-plus'
-import { computed, onMounted, ref } from 'vue';
+import { computed, onMounted, ref, reactive } from 'vue';
 import { cloneDeep } from 'lodash'
 
 const list = ref<Array<Partial<Category>>>([])
 const { bool: loading, toggle } = useBool()
 
+const queryForm = reactive<Partial<Category>>({})
+
 const getList = () => {
-  fetchAll().then(res => {
+  fetchAll(queryForm.name).then(res => {
     list.value = res.list || [];
   })
 }
@@ -76,7 +78,6 @@ onMounted(() => {
   getList()
 })
 
-const queryForm = ref<Partial<Category>>({})
 
 </script>
 
@@ -84,7 +85,7 @@ const queryForm = ref<Partial<Category>>({})
   <div v-loading="loading">
     <el-form inline>
       <el-form-item prop="name">
-        <el-input v-model="queryForm.name" placeholder="类别名" />
+        <el-input v-model="queryForm.name" placeholder="类别名" clearable />
       </el-form-item>
       <el-form-item>
         <el-button type="primary" @click="getList">查询</el-button>
