@@ -28,7 +28,7 @@ watchEffect(() => {
         <el-icon><Handbag /></el-icon>
         <span>商品管理</span>
       </el-menu-item>
-      <el-menu-item index="/order">
+      <el-menu-item index="/shopOrder">
         <el-icon><Sell /></el-icon>
         <span>订单管理</span>
       </el-menu-item>

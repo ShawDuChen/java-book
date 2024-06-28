@@ -34,4 +34,25 @@ declare module 'app' {
     updatedAt: string;
     category?: Category;
   }
+
+  interface Cart {
+    id: number;
+    productId: number;
+    product?: Product;
+    userId: number;
+    user?: User;
+    orderId: number;
+    count: number;
+    createdAt: string;
+    updatedAt: string;
+  }
+
+  interface ShopOrder {
+    id: number;
+    carts?: Cart[];
+    userId: number;
+    user?: User;
+    createdAt: string;
+    updatedAt: string;
+  }
 }

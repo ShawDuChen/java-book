@@ -1,0 +1,50 @@
+import request from '@/utils/request'
+import { ShopOrder } from 'app'
+
+export const fetchAll = () => {
+  return request<ShopOrder>({
+    url: '/shopOrder/all',
+    method: 'get'
+  })
+}
+
+export const createShopOrder = (shopOrder: Partial<ShopOrder>) => {
+  return request<ShopOrder>({
+    url: '/shopOrder/create',
+    method: 'post',
+    data: {
+      model: shopOrder
+    }
+  })
+}
+
+export const updateShopOrder = (shopOrder: Partial<ShopOrder>) => {
+  return request<ShopOrder>({
+    url: '/shopOrder/update',
+    method: 'post',
+    data: {
+      model: shopOrder
+    }
+  })
+}
+
+export const deleteShopOrder = (id: number) => {
+  return request<ShopOrder>({
+    url: '/shopOrder/delete',
+    method: 'get',
+    params: {
+      id
+    }
+  })
+}
+
+export const getShopOrder = (id: number) => {
+  return request<ShopOrder>({
+    url: '/shopOrder/get',
+    method: 'get',
+    params: {
+      id
+    }
+  })
+}
+
