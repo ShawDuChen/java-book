@@ -3,6 +3,7 @@ import { RouterView } from 'vue-router'
 import { ElContainer, ElHeader, ElAside, ElScrollbar, ElMain } from 'element-plus'
 import AppHeader from './components/app-header.vue';
 import AppMenu from './components/app-menu.vue';
+import { HomeButton } from '@/components'
 </script>
 
 <template>
@@ -22,5 +23,6 @@ import AppMenu from './components/app-menu.vue';
         </el-main>
       </el-container>
     </el-container>
+    <home-button path="/c/dashboard" />
   </div>
 </template>

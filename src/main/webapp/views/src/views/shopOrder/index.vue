@@ -4,7 +4,7 @@ import { useBool } from '@/hooks';
 import { ShopOrder } from 'app';
 import { ElTable, ElTableColumn } from 'element-plus'
 import { onMounted, ref } from 'vue';
-import OrderProduct from './modules/order-product.vue';
+import { OrderProduct } from '@/components';
 
 const list = ref<Array<Partial<ShopOrder>>>([])
 const { bool: loading } = useBool()
@@ -50,8 +50,8 @@ onMounted(() => {
           <el-tag :type="row.paid ? 'success' : 'danger'">{{  row.paid ? '是' : '否' }}</el-tag>
         </template>
       </el-table-column>
-      <el-table-column prop="createdAt" label="创建时间" align="center" />
-      <el-table-column prop="updatedAt" label="更新时间" align="center" />
+      <el-table-column prop="createdAt" label="创建时间" align="center" width="180px" />
+      <el-table-column prop="updatedAt" label="更新时间" align="center" width="180px" />
     </el-table>
   </div>
 </template>

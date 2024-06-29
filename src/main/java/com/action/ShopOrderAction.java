@@ -92,7 +92,7 @@ public class ShopOrderAction extends BaseActionSupport<ShopOrder> implements Mod
     })
     public String getAll() {
         try {
-            List<ShopOrder> _list = shopOrderService.getAll();
+            List<ShopOrder> _list = shopOrderService.getAll(getQuery("userId"));
             actionSuccess(null);
             setList(_list);
             return SUCCESS;

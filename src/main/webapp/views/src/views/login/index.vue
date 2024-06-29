@@ -10,8 +10,8 @@ import { cacheUser } from '@/utils/cache';
 const formRef = ref<FormInstance>()
 
 const formData = ref<Partial<User & { type: number }>>({
-  username:'shaw',
-  password:'shawduchen',
+  username:'',
+  password:'',
   type: 1
 })
 

@@ -1,8 +1,8 @@
 <script lang="ts" setup>
 import useStore from '@/store';
-import { ArrowDown, UserFilled } from '@element-plus/icons-vue'
+import { ArrowDown, UserFilled, ShoppingCartFull } from '@element-plus/icons-vue'
 import { ElDropdown, ElDropdownItem, ElDropdownMenu, ElIcon, ElMessage, ElMessageBox } from 'element-plus'
-import { useRouter } from 'vue-router';
+import { useRouter, RouterLink } from 'vue-router';
 
 const router = useRouter();
 const store = useStore();
@@ -26,16 +26,21 @@ const onCommand = (command: "profile" | "logout") => {
   }
 }
 
+const toClient = () => {
+  router.push("/c/dashboard")
+}
+
 </script>
 
 <template>
   <div class="logo flex-center" style="width: 200px;">管理后台</div>
   <div class="avatar" style="padding-right: 16px;">
+    <el-icon :size="20" style="margin: 0 20px;" class="pointer" @click="toClient"><ShoppingCartFull /></el-icon>
     <el-dropdown @command="onCommand">
       <span class="el-dropdown-link flex-center pointer">
-        <el-icon><UserFilled /></el-icon>
-        <span>{{ store.user.username }}</span>
-        <el-icon class="el-icon--right">
+        <el-icon :size="20"><UserFilled /></el-icon>
+        <span style="padding: 0 6px">{{ store.user.username }}</span>
+        <el-icon :size="20" class="el-icon--right">
           <arrow-down />
         </el-icon>
       </span>

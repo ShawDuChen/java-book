@@ -51,9 +51,16 @@ public class ShopOrderServiceImpl implements ShopOrderService {
     }
 
     @Override
-    public List<ShopOrder> getAll() {
+    public List<ShopOrder> getAll(String userId) {
         Session session = getSession();
-        Query<ShopOrder> query = session.createQuery("from shop_order ORDER BY createdAt desc", ShopOrder.class);
+        User currentUser = userId == null ? null : session.get(User.class, Long.parseLong(userId));
+        Query<ShopOrder> query = null;
+        if (currentUser != null) {
+            query = session.createQuery("from shop_order where user=:currentUser ORDER BY createdAt desc", ShopOrder.class);
+            query.setParameter("currentUser", currentUser);
+        } else {
+            query = session.createQuery("from shop_order ORDER BY createdAt desc", ShopOrder.class);
+        }
         List<ShopOrder> result = query.getResultList();
         for (ShopOrder shopOrder : result) {
             User user = shopOrder.getUser();

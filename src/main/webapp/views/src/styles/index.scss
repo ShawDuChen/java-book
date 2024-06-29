@@ -1,6 +1,8 @@
 @import "normalize.css/normalize.css";
 @import "element-plus/theme-chalk/src/index.scss";
-
+#app {
+  min-width: 750px;
+}
 .container {
   height: calc(100vh);
   overflow: hidden;

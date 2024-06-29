@@ -1,10 +1,11 @@
 import request from '@/utils/request'
 import { ShopOrder } from 'app'
 
-export const fetchAll = () => {
+export const fetchAll = (userId?: number) => {
   return request<ShopOrder>({
     url: '/shopOrder/all',
-    method: 'get'
+    method: 'get',
+    params: { userId }
   })
 }
 

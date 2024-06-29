@@ -2,6 +2,7 @@
 import { ElContainer, ElHeader, ElMain } from 'element-plus';
 import ClientHeader from './components/client-header.vue';
 import { RouterView } from 'vue-router'
+import { HomeButton } from '@/components'
 </script>
 
 <template>
@@ -13,4 +14,5 @@ import { RouterView } from 'vue-router'
       <router-view />
     </el-main>
   </el-container>
+  <home-button path="/user" />
 </template>
