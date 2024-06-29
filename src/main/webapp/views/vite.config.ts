@@ -2,10 +2,12 @@ import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
 import { resolve } from 'path'
 
+const prefix = '/book_war_exploded'
+
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [vue()],
-  base: process.env.NODE_ENV === 'production' ? '/book_war_exploded/views/dist/' : '/',
+  base: process.env.NODE_ENV === 'production' ? `${prefix}/views/dist/` : '/',
   resolve: {
     alias: {
       "@": resolve(__dirname, './src')
@@ -14,7 +16,7 @@ export default defineConfig({
   server: {
     proxy: {
       '/api': {
-        target: 'http://localhost:8080/book_war_exploded',
+        target: `http://localhost:8080${prefix}`,
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/api/, '')
       }

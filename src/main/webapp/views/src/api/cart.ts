@@ -1,5 +1,5 @@
 import request from '@/utils/request'
-import { Cart, ShopOrder } from 'app'
+import { Cart } from 'app'
 
 export const fetchAll = (userId?: number) => {
   return request<Cart>({

@@ -9,8 +9,10 @@ export interface ResponseData<T = null> {
   list?: T[]
 }
 
+console.log(import.meta.env)
+
 const serve = axios.create({
-  baseURL: '/api',
+  baseURL: import.meta.env.VITE_APP_BASE_URL,
   timeout: 60 * 1000
 })
 
