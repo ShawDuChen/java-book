@@ -71,6 +71,10 @@ const router = createRouter({
     {
       path: "/forgot",
       component: () => import("@/views/login/forgot.vue")
+    },
+    {
+      path: '/reset',
+      component: () => import("@/views/login/reset.vue")
     }
   ]
 })

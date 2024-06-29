@@ -21,3 +21,22 @@ export function register(data: Partial<User>) {
   })
 }
  
+export function verify(data: Partial<User>) {
+  return request<User>({
+    url: '/auth/verify',
+    method: "post",
+    data: {
+      model: data
+    }
+  })
+}
+
+export function resetPassword(data: Partial<User>) {
+  return request({
+    url: '/auth/resetPassword',
+    method: "post",
+    data: {
+      model: data
+    }
+  })
+}

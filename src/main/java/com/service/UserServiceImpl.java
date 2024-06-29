@@ -92,4 +92,22 @@ public class UserServiceImpl implements UserService{
         Session session = getSession();
         return session.get(User.class, id);
     }
+
+    @Override
+    public User verify(User user) {
+        Session session = getSession();
+        Query<User> query = session.createQuery("from user where username = :username AND phone = :phone", User.class);
+        query.setParameter("username", user.getUsername());
+        query.setParameter("phone", user.getPhone());
+        return query.uniqueResult();
+    }
+
+    @Override
+    public void resetPassword(User user) {
+        Session session = getSession();
+        User result = session.get(User.class, user.getId());
+        String newPassword = BCryptHandle.encrypt(user.getPassword());
+        result.setPassword(newPassword);
+        session.update(result);
+    }
 }

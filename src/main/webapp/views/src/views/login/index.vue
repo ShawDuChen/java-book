@@ -1,11 +1,11 @@
 <script lang="ts" setup>
-import { ref } from 'vue'
+import { onMounted, ref } from 'vue'
 import { FormInstance } from 'element-plus'
 import { login } from '@/api/auth';
 import { useRouter, RouterLink } from 'vue-router';
 import { User } from 'app';
 import useStore from '@/store';
-import { cacheUser } from '@/utils/cache';
+import { cacheUser, clearUser } from '@/utils/cache';
 
 const formRef = ref<FormInstance>()
 
@@ -32,6 +32,9 @@ const toLogin = () => {
   })
 }
 
+onMounted(() => {
+  clearUser()
+})
 </script>
 
 <template>

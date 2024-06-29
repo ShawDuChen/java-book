@@ -1,7 +1,7 @@
 import { readUser } from "@/utils/cache";
 import { Router } from "vue-router";
 
-const whiteList = ['/login', '/register', '/forgot']
+const whiteList = ['/login', '/register', '/forgot', '/reset']
 
 export const registerGuard = (router: Router) => {
 

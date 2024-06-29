@@ -1,8 +1,9 @@
 <script lang="ts" setup>
 import useStore from '@/store';
+import { clearUser } from '@/utils/cache';
 import { ArrowDown, UserFilled, ShoppingCartFull } from '@element-plus/icons-vue'
 import { ElDropdown, ElDropdownItem, ElDropdownMenu, ElIcon, ElMessage, ElMessageBox } from 'element-plus'
-import { useRouter, RouterLink } from 'vue-router';
+import { useRouter } from 'vue-router';
 
 const router = useRouter();
 const store = useStore();
@@ -16,6 +17,7 @@ const onCommand = (command: "profile" | "logout") => {
       ElMessageBox.confirm("确定退出登录吗？", "提示", {
         type: 'warning'
       }).then(() => {
+        clearUser();
         router.push("/login")
       }).catch(() => {
         ElMessage.info('取消注销~');

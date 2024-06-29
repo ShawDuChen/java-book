@@ -5,6 +5,7 @@ import com.opensymphony.xwork2.ModelDriven;
 import com.service.UserService;
 import com.utils.BaseActionSupport;
 import org.apache.struts2.convention.annotation.*;
+import org.hibernate.HibernateException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -30,11 +31,16 @@ public class LoginAction extends BaseActionSupport<User> implements ModelDriven<
             @InterceptorRef("json")
     })
     public String execute() throws Exception {
-        User user = userService.login(getModel());
-        if (user != null) {
-            actionSuccess(user);
-            return SUCCESS;
-        } else {
+        try {
+            User user = userService.login(getModel());
+            if (user != null) {
+                actionSuccess(user);
+                return SUCCESS;
+            } else {
+                actionError();
+                return ERROR;
+            }
+        } catch (HibernateException e) {
             actionError();
             return ERROR;
         }
@@ -48,7 +54,39 @@ public class LoginAction extends BaseActionSupport<User> implements ModelDriven<
             userService.register(getModel());
             actionSuccess(getModel());
             return SUCCESS;
-        } catch (Exception e) {
+        } catch (HibernateException e) {
+            actionError();
+            return ERROR;
+        }
+    }
+
+    @Action(value = "verify", interceptorRefs = {
+            @InterceptorRef("json")
+    })
+    public String verify() throws Exception {
+        try {
+            User user = userService.verify(getModel());
+            if (user == null) {
+                actionError();
+                return ERROR;
+            }
+            actionSuccess(user);
+            return SUCCESS;
+        } catch (HibernateException e) {
+            actionError();
+            return ERROR;
+        }
+    }
+
+    @Action(value = "resetPassword", interceptorRefs = {
+            @InterceptorRef("json")
+    })
+    public String resetPassword() throws Exception {
+        try {
+            userService.resetPassword(getModel());
+            actionSuccess(null);
+            return SUCCESS;
+        } catch (HibernateException e) {
             actionError();
             return ERROR;
         }

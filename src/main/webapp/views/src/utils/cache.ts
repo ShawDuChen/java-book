@@ -11,3 +11,7 @@ export const readUser: () => Partial<User> = () => {
   }
   return {};
 }
+
+export const clearUser = () => {
+  localStorage.removeItem('user');
+}
