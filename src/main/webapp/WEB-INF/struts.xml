@@ -18,7 +18,7 @@
         <default-interceptor-ref name="jsonStack"/>
         <default-action-ref name="index" />
         <action name="index">
-            <result>/index.jsp</result>
+            <result>/views/index.html</result>
         </action>
     </package>
 </struts>
