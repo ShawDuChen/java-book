@@ -5,7 +5,7 @@ import {
   ElForm, ElFormItem, ElInput, ElSelect, ElOption, ElTag, ElDivider, ElEmpty,
   ElRow, ElCol
 } from 'element-plus'
-import { onMounted, reactive, ref } from 'vue';
+import { computed, onMounted, reactive, ref } from 'vue';
 import { fetchAll as fetchCategories } from '@/api/category'
 import { fetchAll, fetchHotList, fetchNewList } from '@/api/product';
 import { ProductCard } from '@/components'
@@ -17,6 +17,13 @@ const getCategories = async () => {
   const res = await fetchCategories()
   categories.value = res.list || [];
 }
+
+const categoryMap = computed(() => {
+  return categories.value.reduce((map, item) => {
+    map[`${item.id}`] = item.name;
+    return map;
+  }, {} as Record<string, string>)
+})
 
 const queryForm = reactive<Partial<Product>>({})
 
@@ -57,7 +64,12 @@ onMounted(() => {
       </el-form-item>
       <el-form-item prop="categoryId">
         <el-select v-model="queryForm.categoryId" placeholder="商品分类" style="width: 200px;" clearable filterable>
-          <el-option v-for="item in categories" :key="item.id" :label="item.name" :value="item.id" />
+          <el-option
+            v-for="item in categories"
+            :key="item.id"
+            :label="`${item.parentId ? categoryMap[item.parentId] + '-' + item.name: item.name}`"
+            :value="item.id"
+          />
         </el-select>
       </el-form-item>
       <el-form-item prop="name">

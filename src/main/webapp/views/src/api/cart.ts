@@ -1,10 +1,13 @@
 import request from '@/utils/request'
-import { Cart } from 'app'
+import { Cart, ShopOrder } from 'app'
 
-export const fetchAll = () => {
+export const fetchAll = (userId?: number) => {
   return request<Cart>({
     url: '/cart/all',
-    method: 'get'
+    method: 'get',
+    params: {
+      userId
+    }
   })
 }
 
@@ -48,14 +51,3 @@ export const getCart = (id: number) => {
   })
 }
 
-
-export const createOrder = (ids: number[], userId: number) => {
-  return request<Cart>({
-    url: '/cart/createOrder',
-    method: 'post',
-    data: {
-      ids,
-      userId,
-    }
-  })
-}

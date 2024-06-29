@@ -11,4 +11,6 @@ public interface ShopOrderService {
     public ShopOrder findById(long id);
     public List<ShopOrder> getAll();
     public List<ShopOrder> search(int page, int size);
+    public void pay(long id);
+    public ShopOrder createOrder(List<Long> ids, long userId);
 }

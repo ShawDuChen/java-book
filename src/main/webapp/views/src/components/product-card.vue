@@ -8,7 +8,8 @@ import { createCart } from '@/api/cart';
 import { readUser } from '@/utils/cache';
 
 const props = defineProps<{
-  data: Product
+  data: Product;
+  onlyshow?: boolean;
 }>()
 
 const { bool: loading, toggle } = useBool()
@@ -43,9 +44,11 @@ const confirmAddToCart = async () => {
     <template #header>
       <div class="flex-between">
         <span style="font-size: 20px;font-weight: bold;">{{ data.name }}</span>
-        <el-icon v-show="!formData.edit" color="#f56c6c" :size="20" class="pointer" @click="buyCount">
-          <shopping-cart />
-        </el-icon>
+        <template v-if="!onlyshow">
+          <el-icon v-show="!formData.edit" color="#f56c6c" :size="20" class="pointer" @click="buyCount">
+            <shopping-cart />
+          </el-icon>
+        </template>
       </div>
       <div v-show="formData.edit" class="flex-between" style="margin-top: 6px;">
         <div>

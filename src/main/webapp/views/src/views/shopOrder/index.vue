@@ -31,7 +31,7 @@ onMounted(() => {
 <template>
   <div v-loading="loading">
     <el-table :data="list" border>
-      <el-table-column prop="id" label="订单ID" align="center" />
+      <el-table-column prop="id" label="订单ID" align="center" width="80px" />
       <el-table-column prop="userId" label="下单用户" align="center">
         <template #default="{ row }">{{ row.user?.username }}</template>
       </el-table-column>
@@ -40,9 +40,14 @@ onMounted(() => {
           <order-product :data="row.carts" />
         </template>
       </el-table-column>
-      <el-table-column prop="total" label="总价" align="center">
+      <el-table-column prop="total" label="总价" align="center" width="120px">
         <template #default="{ row }">
           <el-tag type="danger">￥{{ getTotal(row) }}</el-tag>
+        </template>
+      </el-table-column>
+      <el-table-column prop="paid" label="已付款" align="center" width="80px">
+        <template #default="{ row }">
+          <el-tag :type="row.paid ? 'success' : 'danger'">{{  row.paid ? '是' : '否' }}</el-tag>
         </template>
       </el-table-column>
       <el-table-column prop="createdAt" label="创建时间" align="center" />

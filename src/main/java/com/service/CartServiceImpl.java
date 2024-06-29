@@ -65,9 +65,11 @@ public class CartServiceImpl implements CartService {
     }
 
     @Override
-    public List<Cart> getAll() {
+    public List<Cart> getAll(String userId) {
         Session session = getSession();
-        Query<Cart> query = session.createQuery("from cart c where c.order=null ORDER BY createdAt desc", Cart.class);
+        User currentUser = userId == null ? null : session.get(User.class, Long.parseLong(userId));
+        Query<Cart> query = session.createQuery("from cart c where (user is null or user=:currentUser) AND (c.order=null) ORDER BY createdAt desc", Cart.class);
+        query.setParameter("currentUser", currentUser);
         List<Cart> result = query.getResultList();
         for (Cart cart : result) {
             User user = cart.getUser();
@@ -109,21 +111,5 @@ public class CartServiceImpl implements CartService {
             }
         }
         return result;
-    }
-
-    @Override
-    public void createOrder(List<Long> ids, long userId) {
-        Session session = getSession();
-        User user = session.get(User.class, userId);
-        ShopOrder order = new ShopOrder();
-        order.setUser(user);
-        Date now = new Date();
-        order.setCreatedAt(now);
-        order.setUpdatedAt(now);
-        session.persist(order);
-        Query query = session.createQuery("update cart c set c.order=:order where c.id in :ids AND c.order is null");
-        query.setParameter("order", order);
-        query.setParameterList("ids", ids);
-        query.executeUpdate();
     }
 }

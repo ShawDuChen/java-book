@@ -1,6 +1,7 @@
 package com.action;
 
 import com.model.Cart;
+import com.model.ShopOrder;
 import com.opensymphony.xwork2.ModelDriven;
 import com.service.CartService;
 import com.utils.BaseActionSupport;
@@ -32,24 +33,6 @@ public class CartAction extends BaseActionSupport<Cart> implements ModelDriven<C
     private CartService cartService;
     private Cart model = new Cart();
     private List<Cart> list;
-    private List<Long> ids;
-    private long userId;
-
-    public void setUserId(long userId) {
-        this.userId = userId;
-    }
-
-    public long getUserId() {
-        return userId;
-    }
-
-    public void setIds(List<Long> ids) {
-        this.ids = ids;
-    }
-
-    public List<Long> getIds() {
-        return ids;
-    }
 
     public void setList(List<Cart> list) {
         this.list = list;
@@ -91,7 +74,7 @@ public class CartAction extends BaseActionSupport<Cart> implements ModelDriven<C
     })
     public String getAll() {
         try {
-            List<Cart> _list = cartService.getAll();
+            List<Cart> _list = cartService.getAll(getQuery("userId"));
             actionSuccess(null);
             setList(_list);
             return SUCCESS;
@@ -173,15 +156,4 @@ public class CartAction extends BaseActionSupport<Cart> implements ModelDriven<C
         }
     }
 
-    @Action("createOrder")
-    public String createOrder() {
-        try {
-            cartService.createOrder(getIds(), getUserId());
-            actionSuccess(null);
-            return SUCCESS;
-        } catch (HibernateException e) {
-            actionError();
-            return ERROR;
-        }
-    }
 }

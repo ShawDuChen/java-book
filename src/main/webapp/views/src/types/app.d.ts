@@ -55,5 +55,6 @@ declare module 'app' {
     user?: User;
     createdAt: string;
     updatedAt: string;
+    paid: number;
   }
 }

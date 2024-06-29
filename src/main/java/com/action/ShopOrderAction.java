@@ -1,5 +1,6 @@
 package com.action;
 
+import com.model.Cart;
 import com.model.ShopOrder;
 import com.opensymphony.xwork2.ModelDriven;
 import com.service.ShopOrderService;
@@ -32,6 +33,24 @@ public class ShopOrderAction extends BaseActionSupport<ShopOrder> implements Mod
     private ShopOrderService shopOrderService;
     private ShopOrder model = new ShopOrder();
     private List<ShopOrder> list;
+    private List<Long> ids;
+    private long userId;
+
+    public void setIds(List<Long> ids) {
+        this.ids = ids;
+    }
+
+    public List<Long> getIds() {
+        return ids;
+    }
+
+    public long getUserId() {
+        return userId;
+    }
+
+    public void setUserId(long userId) {
+        this.userId = userId;
+    }
 
     public void setList(List<ShopOrder> list) {
         this.list = list;
@@ -147,6 +166,31 @@ public class ShopOrderAction extends BaseActionSupport<ShopOrder> implements Mod
         try {
             long id = Long.parseLong(getQuery("id"));
             shopOrderService.delete(id);
+            actionSuccess(null);
+            return SUCCESS;
+        } catch (HibernateException e) {
+            actionError();
+            return ERROR;
+        }
+    }
+
+    @Action("createOrder")
+    public String createOrder() {
+        try {
+            ShopOrder order = shopOrderService.createOrder(getIds(), getUserId());
+            actionSuccess(order);
+            return SUCCESS;
+        } catch (HibernateException e) {
+            actionError();
+            return ERROR;
+        }
+    }
+
+    @Action(value = "pay")
+    public String payOrder() {
+        try {
+            long id = Long.parseLong(getQuery("id"));
+            shopOrderService.pay(id);
             actionSuccess(null);
             return SUCCESS;
         } catch (HibernateException e) {

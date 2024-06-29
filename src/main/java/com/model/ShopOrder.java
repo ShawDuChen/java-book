@@ -22,6 +22,9 @@ public class ShopOrder {
     @JoinColumn(name = "user_id")
     private User user;
 
+    @Column
+    private int paid = 0;
+
     @Column(name = "created_at")
     @Temporal(TemporalType.TIMESTAMP)
     private Date createdAt;
@@ -61,6 +64,12 @@ public class ShopOrder {
     }
     public void setUser(User user) {
         this.user = user;
+    }
+    public int getPaid() {
+        return paid;
+    }
+    public void setPaid(int paid) {
+        this.paid = paid;
     }
     @JSON(format = "yyyy-MM-dd HH:mm:ss")
     public Date getCreatedAt() {

@@ -80,4 +80,31 @@ public class ShopOrderServiceImpl implements ShopOrderService {
         }
         return result;
     }
+
+    @Override
+    public void pay(long id) {
+        Session session = getSession();
+        ShopOrder shopOrder = session.get(ShopOrder.class, id);
+        shopOrder.setPaid(1);
+        shopOrder.setUpdatedAt(new Date());
+        session.update(shopOrder);
+    }
+
+    @Override
+    public ShopOrder createOrder(List<Long> ids, long userId) {
+        Session session = getSession();
+        User user = session.get(User.class, userId);
+        ShopOrder order = new ShopOrder();
+        order.setUser(user);
+        order.setPaid(0);
+        Date now = new Date();
+        order.setCreatedAt(now);
+        order.setUpdatedAt(now);
+        session.persist(order);
+        Query query = session.createQuery("update cart c set c.order=:order where c.id in :ids AND c.order is null");
+        query.setParameter("order", order);
+        query.setParameterList("ids", ids);
+        query.executeUpdate();
+        return order;
+    }
 }
