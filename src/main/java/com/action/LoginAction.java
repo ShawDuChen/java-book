@@ -4,6 +4,7 @@ import com.model.User;
 import com.opensymphony.xwork2.ModelDriven;
 import com.service.UserService;
 import com.utils.BaseActionSupport;
+import com.utils.JwtTokenGenerator;
 import org.apache.struts2.convention.annotation.*;
 import org.hibernate.HibernateException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,11 +14,11 @@ import org.springframework.stereotype.Component;
 @ParentPackage("json-default")
 @Results({
         @Result(name = "success", type = "json", params = {
-                "includeProperties", "data.*,code,message",
+                "includeProperties", "data.*,code,message,token",
                 "excludeProperties", "model"
         }),
         @Result(name = "error", type = "json", params = {
-                "includeProperties", "data.*,code,message",
+                "includeProperties", "data.*,code,message,token",
                 "excludeProperties", "model"
         })
 })
@@ -26,6 +27,15 @@ public class LoginAction extends BaseActionSupport<User> implements ModelDriven<
     @Autowired
     private UserService userService;
     private User model = new User();
+    private String token;
+
+    public void setToken(String token) {
+        this.token = token;
+    }
+
+    public String getToken() {
+        return token;
+    }
 
     @Action(value = "login", interceptorRefs = {
             @InterceptorRef("json")
@@ -34,6 +44,7 @@ public class LoginAction extends BaseActionSupport<User> implements ModelDriven<
         try {
             User user = userService.login(getModel());
             if (user != null) {
+                setToken(JwtTokenGenerator.generateToken(user.getUsername()));
                 actionSuccess(user);
                 return SUCCESS;
             } else {

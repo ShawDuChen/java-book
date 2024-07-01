@@ -1,13 +1,16 @@
 import axios from 'axios'
 import type { AxiosError, AxiosRequestConfig, AxiosResponse } from 'axios'
 import { ElMessage } from 'element-plus'
+import { getToken } from './cache';
+import router from '@/router';
 
-export interface ResponseData<T = null> {
+export type ResponseData<T = null> = {
   code: number
   message: string
   data: T
   list?: T[]
-}
+  token?: string;
+};
 
 console.log(import.meta.env)
 
@@ -18,6 +21,10 @@ const serve = axios.create({
 
 serve.interceptors.request.use(
   (config) => {
+    const token = getToken();
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`
+    }
     return config
   },
   (error) => {
@@ -35,8 +42,13 @@ serve.interceptors.response.use(
     return response;
   },
   (error: AxiosError) => {
-    const { code, message } = error;
-    ElMessage.error(`[${code}]: ${message}`)
+    const { status, statusText } = error.response || {};
+    if (status === 401) {
+      ElMessage.error('认证失败，请重新登录')
+      router.push('/login');
+    } else {
+      ElMessage.error(`[${status}]: ${statusText || 'Server Error'}`)
+    }
     return Promise.reject(error)
   }
 )

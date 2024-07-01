@@ -23,6 +23,7 @@ export default defineConfig({
     }
   },
   build: {
-    outDir: '../webapp/views'
+    outDir: '../webapp/views',
+    emptyOutDir: true
   }
 })

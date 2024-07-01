@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 
 @Namespace("/user")
-@ParentPackage("json-default")
+@ParentPackage("default")
 @Results({
         @Result(name = "success", type = "json", params = {
                 "includeProperties", "data.*,code,message",
@@ -24,6 +24,7 @@ import java.util.List;
         })
 })
 @InterceptorRefs({
+        @InterceptorRef("jwtToken"),
         @InterceptorRef("json")
 })
 @Component

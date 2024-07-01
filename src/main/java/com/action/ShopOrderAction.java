@@ -13,7 +13,7 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 
 @Namespace("/shopOrder")
-@ParentPackage("json-default")
+@ParentPackage("default")
 @Results({
         @Result(name = "success", type = "json", params = {
                 "includeProperties", "data.*,code,message",
@@ -25,6 +25,7 @@ import java.util.List;
         })
 })
 @InterceptorRefs({
+        @InterceptorRef("jwtToken"),
         @InterceptorRef("json")
 })
 @Component

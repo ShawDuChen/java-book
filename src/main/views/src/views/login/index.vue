@@ -5,7 +5,7 @@ import { login } from '@/api/auth';
 import { useRouter, RouterLink } from 'vue-router';
 import { User } from 'app';
 import useStore from '@/store';
-import { cacheUser, clearUser } from '@/utils/cache';
+import { cacheUser, clearUser, setToken } from '@/utils/cache';
 
 const formRef = ref<FormInstance>()
 
@@ -25,6 +25,7 @@ const toLogin = () => {
       const data = formData.value;
       login(data).then((res) => {
         store.updateUser(res.data);
+        setToken(res.token!)
         cacheUser(res.data);
         router.push(data.type === 1 ? '/user' : '/c/dashboard')
       })
