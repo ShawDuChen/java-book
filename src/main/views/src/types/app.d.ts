@@ -9,6 +9,7 @@ declare module 'app' {
     phone: string;
     gender: number;
     status: number;
+    isAdmin?: number;
     createdAt: string;
     updatedAt: string;
   }

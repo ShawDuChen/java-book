@@ -41,6 +41,10 @@ public class UserServiceImpl implements UserService{
         if (result == null) {
             return null;
         }
+        // 登录不可用
+        if (result.getStatus() == 0) {
+            return null;
+        }
         Boolean checkIn = BCryptHandle.verify(user.getPassword(), result.getPassword());
         if (!checkIn) {
             return null;

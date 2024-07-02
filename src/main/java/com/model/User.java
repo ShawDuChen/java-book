@@ -32,6 +32,9 @@ public class User {
     @Column
     private int status = 1;
 
+    @Column(name = "is_admin", nullable = true)
+    private int isAdmin = 0;
+
     @Column(name = "created_at")
     @Temporal(TemporalType.TIMESTAMP)
     private Date createdAt;
@@ -41,7 +44,7 @@ public class User {
     private Date updatedAt;
 
     public User() {}
-    public User(String username, String password, String email, String phone, String address, int gender, int status, Date createdAt, Date updatedAt) {
+    public User(String username, String password, String email, String phone, String address, int gender, int status, int isAdmin,Date createdAt, Date updatedAt) {
         this.username = username;
         this.password = password;
         this.email = email;
@@ -49,6 +52,7 @@ public class User {
         this.address = address;
         this.gender = gender;
         this.status = status;
+        this.isAdmin = isAdmin;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
     }
@@ -101,6 +105,15 @@ public class User {
     public void setStatus(int status) {
         this.status = status;
     }
+
+    public void setIsAdmin(int isAdmin) {
+        this.isAdmin = isAdmin;
+    }
+
+    public int getIsAdmin() {
+        return isAdmin;
+    }
+
     @JSON(format = "yyyy-MM-dd HH:mm:ss")
     public Date getCreatedAt() {
         return createdAt;

@@ -23,7 +23,7 @@ const getTotal = (shopOrder: ShopOrder) => {
   return shopOrder.carts?.reduce((prev, curr) => {
     prev += prev + ((curr.product?.price || 0) * curr.count);
     return prev;
-  }, 0) ?? 0;
+  }, 0).toFixed(2) ?? 0;
 }
 
 const router = useRouter();

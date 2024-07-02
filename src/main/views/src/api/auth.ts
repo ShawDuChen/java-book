@@ -1,12 +1,13 @@
 import request from '@/utils/request'
 import { User } from 'app'
 
-export function login(data: Partial<User>) {
+export function login(data: Partial<User>, loginType?: string) {
   return request<User>({
     url: '/auth/login',
     method: "post",
     data: {
-      model: data
+      model: data,
+      loginType,
     }
   })
 }

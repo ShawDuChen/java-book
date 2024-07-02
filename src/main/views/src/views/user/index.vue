@@ -106,6 +106,13 @@ onMounted(() => {
           }}</el-tag>
         </template>
       </el-table-column>
+      <el-table-column prop="isAdmin" label="管理员" align="center" >
+        <template #default="{ row }">
+          <el-tag :type="row.isAdmin === 1 ? 'success' : 'danger'">{{
+            row.isAdmin === 1 ? "是" : "否"
+          }}</el-tag>
+        </template>
+      </el-table-column>
       <el-table-column prop="createdAt" label="创建时间" align="center" />
       <el-table-column prop="updatedAt" label="更新时间" align="center" />
       <el-table-column prop="action" label="操作" align="center" min-width="120px">

@@ -1,12 +1,13 @@
 <script lang="ts" setup>
-import { deleteCart, fetchAll } from '@/api/cart';
+import { deleteCart, fetchAll, updateCart } from '@/api/cart';
 import { createOrder } from '@/api/shopOrder';
 import ProductCard from '@/components/product-card.vue';
 import { useBool } from '@/hooks';
 import { readUser } from '@/utils/cache';
-import { ShoppingCart } from '@element-plus/icons-vue';
+import { Minus, Plus, ShoppingCart } from '@element-plus/icons-vue';
 import { Cart, ShopOrder } from 'app';
-import { ElMessage, ElMessageBox, ElTable, ElTableColumn } from 'element-plus'
+import { ElMessage, ElMessageBox, ElTable, ElTableColumn, ElTag, ElButton, ElSpace } from 'element-plus'
+import { debounce } from 'lodash';
 import { computed, onMounted, ref } from 'vue';
 import { useRouter } from 'vue-router';
 
@@ -73,6 +74,13 @@ const toPayOrder = (order: ShopOrder) => {
   router.push(`/c/pay?id=${order.id}`)
 }
 
+const handleCountChange = debounce((row: Cart, offset: number) => {
+  toggle()
+  updateCart({ ...row, count: row.count + offset}).then(() => {
+    fetchList();
+  }).finally(() => toggle())
+}, 200)
+
 onMounted(() => {
   fetchList();
 })
@@ -90,7 +98,11 @@ onMounted(() => {
       <el-table-column prop="createdAt" label="加入购物车时间" align="center" />
       <el-table-column prop="count" label="数量" align="center" width="100px">
         <template #default="{ row }">
-          <el-tag type="danger" effect="dark">{{ row.count }}</el-tag>
+          <el-space>
+            <el-button circle :icon="Minus" size="small" :disabled="row.count === 1" @click="handleCountChange(row, -1)" />
+            <el-tag type="danger" effect="dark">{{ row.count }}</el-tag>
+            <el-button circle :icon="Plus" size="small" @click="handleCountChange(row, +1)" />
+          </el-space>
         </template>
       </el-table-column>
       <el-table-column porp="total" label="总价" align="center">

@@ -3,6 +3,9 @@ import { ElContainer, ElHeader, ElMain } from 'element-plus';
 import ClientHeader from './components/client-header.vue';
 import { RouterView } from 'vue-router'
 import { HomeButton } from '@/components'
+import { readUser } from '@/utils/cache';
+
+const user = readUser();
 </script>
 
 <template>
@@ -14,5 +17,5 @@ import { HomeButton } from '@/components'
       <router-view />
     </el-main>
   </el-container>
-  <home-button path="/user" />
+  <home-button v-if="!!user.isAdmin" path="/user" />
 </template>

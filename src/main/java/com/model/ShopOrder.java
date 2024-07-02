@@ -22,7 +22,7 @@ public class ShopOrder {
     @JoinColumn(name = "user_id")
     private User user;
 
-    @Column
+    @Column(nullable = true)
     private int paid = 0;
 
     @Column(name = "created_at")

@@ -88,7 +88,7 @@ onMounted(() => {
             >{{ item.name }}({{ item.count }}) - ￥{{ item.price }}</el-tag>
           </el-space>
         </div>
-        <div class="text-right">
+        <div class="text-right" style="margin-top: 12px">
           <el-button type="danger" @click="payConfirm(false)">支付失败</el-button>
           <el-button type="primary" @click="payConfirm(true)">支付成功</el-button>
         </div>

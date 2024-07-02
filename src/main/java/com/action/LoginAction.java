@@ -28,6 +28,15 @@ public class LoginAction extends BaseActionSupport<User> implements ModelDriven<
     private UserService userService;
     private User model = new User();
     private String token;
+    private String loginType;
+
+    public void setLoginType(String loginType) {
+        this.loginType = loginType;
+    }
+
+    public String getLoginType() {
+        return loginType;
+    }
 
     public void setToken(String token) {
         this.token = token;
@@ -44,9 +53,20 @@ public class LoginAction extends BaseActionSupport<User> implements ModelDriven<
         try {
             User user = userService.login(getModel());
             if (user != null) {
-                setToken(JwtTokenGenerator.generateToken(user.getUsername()));
-                actionSuccess(user);
-                return SUCCESS;
+                if (getLoginType().equals("admin")) {
+                    if (user.getIsAdmin() == 1) {
+                        setToken(JwtTokenGenerator.generateToken(user.getUsername()));
+                        actionSuccess(user);
+                        return SUCCESS;
+                    } else {
+                        actionError();
+                        return ERROR;
+                    }
+                } else {
+                    setToken(JwtTokenGenerator.generateToken(user.getUsername()));
+                    actionSuccess(user);
+                    return SUCCESS;
+                }
             } else {
                 actionError();
                 return ERROR;
