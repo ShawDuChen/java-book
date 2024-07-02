@@ -1,1 +1,0 @@
-import{r}from"./index-Bl4G9Ods.js";function o(t){return r({url:"/auth/login",method:"post",data:{model:t}})}function a(t){return r({url:"/auth/register",method:"post",data:{model:t}})}function s(t){return r({url:"/auth/verify",method:"post",data:{model:t}})}function u(t){return r({url:"/auth/resetPassword",method:"post",data:{model:t}})}export{u as a,o as l,a as r,s as v};

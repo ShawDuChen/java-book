@@ -1,0 +1,1 @@
+import{r as e}from"./index-CS0l65Ue.js";const o=r=>e({url:"/shopOrder/all",method:"get",params:{userId:r}}),s=r=>e({url:"/shopOrder/get",method:"get",params:{id:r}}),p=(r,t)=>e({url:"/shopOrder/createOrder",method:"post",data:{ids:r,userId:t}}),d=r=>e({url:"/shopOrder/pay",method:"get",params:{id:r}});export{p as c,o as f,s as g,d as p};

@@ -2,7 +2,7 @@
   "compilerOptions": {
     "composite": true,
     "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.app.tsbuildinfo",
-    "target": "ES2020",
+    "target": "ES2015",
     "useDefineForClassFields": true,
     "module": "ESNext",
     "lib": ["ES2020", "DOM", "DOM.Iterable"],
@@ -31,6 +31,6 @@
 
     "types": ["element-plus/global.d.ts"]
   },
-  "include": ["./src/**/*.ts", "./src/**/*.tsx", "./src/**/*.vue"],
+  "include": ["./src/**/*.ts", "./src/**/*.tsx", "./src/**/*.vue", "./src/**/*.d.ts"],
   "exclude": ["node_modules", "**/*.spec.ts", "**/*.spec.tsx", "**/*.spec.vue", "**/*.java", "**/*.xml"]
 }
