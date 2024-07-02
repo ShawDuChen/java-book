@@ -41,9 +41,12 @@ public class Product {
     @Transient
     private int sellCount = 0;
 
+    @Transient
+    private int commentCount = 0;
+
     public Product() {}
 
-    public Product(String name, String code, String description, double price, long categoryId, Category category, Date createdAt, Date updatedAt, int sellCount) {
+    public Product(String name, String code, String description, double price, long categoryId, Category category, Date createdAt, Date updatedAt, int sellCount, int commentCount) {
         this.name = name;
         this.code = code;
         this.description = description;
@@ -53,6 +56,7 @@ public class Product {
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
         this.sellCount = sellCount;
+        this.commentCount = commentCount;
     }
 
     public long getId() {
@@ -129,5 +133,13 @@ public class Product {
 
     public void setSellCount(int sellCount) {
         this.sellCount = sellCount;
+    }
+
+    public int getCommentCount() {
+        return commentCount;
+    }
+
+    public void setCommentCount(int commentCount) {
+        this.commentCount = commentCount;
     }
 }
