@@ -1,6 +1,5 @@
 package com.service;
 
-import com.model.Cart;
 import com.model.Category;
 import com.model.Product;
 import org.hibernate.Session;
@@ -27,8 +26,6 @@ public class ProductServiceImpl implements ProductService {
     public void add(Product product) {
         Session session = getSession();
         product.setCreatedAt(new Date());
-        Category category = session.get(Category.class, product.getCategoryId());
-        product.setCategory(category);
         session.save(product);
     }
 
@@ -36,8 +33,6 @@ public class ProductServiceImpl implements ProductService {
     public void update(Product product) {
         Session session = getSession();
         product.setUpdatedAt(new Date());
-        Category category = session.get(Category.class, product.getCategoryId());
-        product.setCategory(category);
         session.update(product);
     }
 
@@ -62,12 +57,11 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public List<Product> getAll(String name, String categoryId) {
         Session session = getSession();
-        Category category = categoryId == null ? null : session.get(Category.class, Long.parseLong(categoryId));
         Query query = session.createQuery(
-                queryString(null, "where (p.name is null or p.name like :name) AND (coalesce(:category, p.category)=p.category or p.category is null) ")
+                queryString(null, "where (p.name is null or p.name like :name) AND (coalesce(:categoryId, p.categoryId)=p.categoryId or p.categoryId is null) ")
         );
         query.setParameter("name", "%" + (name != null ? name : "") + "%");
-        query.setParameter("category", category);
+        query.setParameter("categoryId", categoryId ==null?null:Long.parseLong(categoryId));
         List<Object[]> result = query.getResultList();
         return serializeResult(result);
     }
@@ -93,52 +87,26 @@ public class ProductServiceImpl implements ProductService {
         return serializeResult(result);
     }
 
-    public void formatResult(List<Product> result, Map<Long, Integer> map) {
-        for (Product product : result) {
-            Category category = product.getCategory();
-            if (category != null) {
-                product.setCategoryId(category.getId());
-            }
-            if (map.containsKey(product.getId())) {
-                int sellCount = map.get(product.getId());
-                product.setSellCount(sellCount);
-            }
-        }
-    }
-
     private List<Product> serializeResult(List<Object[]> result) {
         List<Product> productList = new ArrayList<>();
         for (Object[] row : result) {
             Product product = (Product)row[0];
             double score = row[1] == null ? 0 : (double)row[1];
             long sellCount = row[2] == null ? 0 : (long)row[2];
+            Category category = (Category) row[3];
             product.setScore(score);
             product.setSellCount(sellCount);
-            Category category = product.getCategory();
-            product.setCategoryId(category.getId());
+            product.setCategory(category);
             productList.add(product);
         }
         return productList;
     }
 
-    public Map<Long, Integer> getProductSellCountMap(Session session) {
-        Query<Cart> query = session.createQuery("from cart c where c.order is not null", Cart.class);
-        List<Cart> cartList = query.getResultList();
-        Map<Long, Integer> map = new HashMap<>();
-        for (Cart cart : cartList) {
-            long productId = cart.getProduct().getId();
-            if (!map.containsKey(productId)) {
-                map.put(productId, 0);
-            }
-            map.put(productId, map.get(productId) + 1);
-        }
-        return map;
-    }
-
     public String queryString(String orderBy, String where) {
-        return "select p, ROUND(avg(r.score), 2) as avgScore, sum(c.count) as sellCount from product p "
+        return "select p, ROUND(avg(r.score), 2) as avgScore, sum(c.count) as sellCount, ct from product p "
                 + "LEFT join rating r on p = r.product "
                 + "LEFT join cart c on (p = c.product and c.order is not null) "
+                + "LEFT join category ct on (ct.id = p.categoryId)"
                 + (where == null ? "" : where)
                 + "group by p.id " + (orderBy == null ? "order by p.createdAt desc" : orderBy);
     }

@@ -23,11 +23,10 @@ public class Product {
     @Column(nullable = false)
     private double price = 0;
 
-    @Transient
+    @Column(name = "category_id", nullable = false)
     private long categoryId; // 非数据库列，用于创建/更新
 
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "category_id")
+    @Transient
     private Category category;
 
     @Column(name = "created_at")
@@ -48,18 +47,14 @@ public class Product {
     private double score;
 
     public Product() {}
-
-    public Product(String name, String code, String description, double price, long categoryId, Category category, Date createdAt, Date updatedAt, long sellCount, int commentCount) {
+    public Product(String name, String code, String description, double price, long categoryId, Date createdAt, Date updatedAt) {
         this.name = name;
         this.code = code;
         this.description = description;
         this.price = price;
         this.categoryId = categoryId;
-        this.category = category;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
-        this.sellCount = sellCount;
-        this.commentCount = commentCount;
     }
 
     public long getId() {
