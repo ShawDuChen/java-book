@@ -9,7 +9,6 @@ import org.hibernate.query.Query;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.persistence.EntityNotFoundException;
 import javax.transaction.Transactional;
 import java.util.*;
 
@@ -52,60 +51,46 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public Product findById(long id) {
         Session session = getSession();
-        Product product = session.get(Product.class, id);
-        if (product == null) {
-            throw new EntityNotFoundException("Product with id " + id + " not found");
-        }
-        Query<Cart> query = session.createQuery("from cart c where c.product = :product AND c.order IS NOT null", Cart.class);
-        query.setParameter("product", product);
-        List<Cart> cart = query.getResultList();
-        product.setSellCount(cart.size());
-        return product;
+        Query query = session.createQuery(
+                queryString(null, "where p.id=:id ")
+        );
+        query.setParameter("id", id);
+        List<Product> result = serializeResult(query.getResultList());
+        return !result.isEmpty() ? result.get(0) : null;
     }
 
     @Override
     public List<Product> getAll(String name, String categoryId) {
         Session session = getSession();
         Category category = categoryId == null ? null : session.get(Category.class, Long.parseLong(categoryId));
-        Query<Product> query = session.createQuery("from product where (name is null or name like :name) AND (:category is null or category=:category) order by createdAt desc", Product.class);
+        Query query = session.createQuery(
+                queryString(null, "where (p.name is null or p.name like :name) AND (coalesce(:category, p.category)=p.category or p.category is null) ")
+        );
         query.setParameter("name", "%" + (name != null ? name : "") + "%");
         query.setParameter("category", category);
-        List<Product> result = query.getResultList();
-        Map<Long, Integer> map = getProductSellCountMap(session);
-        formatResult(result, map);
-        return result;
+        List<Object[]> result = query.getResultList();
+        return serializeResult(result);
     }
 
     @Override
     public List<Product> search(int page, int size) {
         int start = (page - 1) * size;
         Session session = getSession();
-        Query<Product> query = session.createQuery("from product order by createdAt desc", Product.class);
+        Query query = session.createQuery(queryString(null, null));
         query.setFirstResult(start);
         query.setMaxResults(size);
-        List<Product> result = query.getResultList();
-        Map<Long, Integer> map = getProductSellCountMap(session);
-        formatResult(result, map);
-        return result;
+        List<Object[]> result = query.getResultList();
+        return serializeResult(result);
     }
 
     @Override
     public List<Product> getHots() {
         Session session = getSession();
-        Query query = session.createQuery("select c.product, count(c) from cart c where c.order is not null group by c.product");
+        Query query = session.createQuery(queryString("order by sellCount desc", null));
         query.setFirstResult(0);
         query.setMaxResults(20);
-        List<Object[]> carts = query.getResultList();
-        List<Long> ids = new ArrayList<>();
-        for (Object[] row : carts) {
-            ids.add(((Product)row[0]).getId());
-        }
-        Query<Product> pQuery = session.createQuery("from product p where p.id in :ids", Product.class);
-        pQuery.setParameterList("ids", ids);
-        List<Product> result = pQuery.getResultList();
-        Map<Long, Integer> map = getProductSellCountMap(session);
-        formatResult(result, map);
-        return result;
+        List<Object[]> result = query.getResultList();
+        return serializeResult(result);
     }
 
     public void formatResult(List<Product> result, Map<Long, Integer> map) {
@@ -121,6 +106,21 @@ public class ProductServiceImpl implements ProductService {
         }
     }
 
+    private List<Product> serializeResult(List<Object[]> result) {
+        List<Product> productList = new ArrayList<>();
+        for (Object[] row : result) {
+            Product product = (Product)row[0];
+            double score = row[1] == null ? 0 : (double)row[1];
+            long sellCount = row[2] == null ? 0 : (long)row[2];
+            product.setScore(score);
+            product.setSellCount(sellCount);
+            Category category = product.getCategory();
+            product.setCategoryId(category.getId());
+            productList.add(product);
+        }
+        return productList;
+    }
+
     public Map<Long, Integer> getProductSellCountMap(Session session) {
         Query<Cart> query = session.createQuery("from cart c where c.order is not null", Cart.class);
         List<Cart> cartList = query.getResultList();
@@ -133,5 +133,13 @@ public class ProductServiceImpl implements ProductService {
             map.put(productId, map.get(productId) + 1);
         }
         return map;
+    }
+
+    public String queryString(String orderBy, String where) {
+        return "select p, ROUND(avg(r.score), 2) as avgScore, sum(c.count) as sellCount from product p "
+                + "LEFT join rating r on p = r.product "
+                + "LEFT join cart c on (p = c.product and c.order is not null) "
+                + (where == null ? "" : where)
+                + "group by p.id " + (orderBy == null ? "order by p.createdAt desc" : orderBy);
     }
 }

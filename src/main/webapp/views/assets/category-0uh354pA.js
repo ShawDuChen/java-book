@@ -1,0 +1,1 @@
+import{I as t}from"./index-CTdGs5XT.js";const a=e=>t({url:"/category/all",method:"get",params:{name:e}}),o=e=>t({url:"/category/create",method:"post",data:{model:e}}),s=e=>t({url:"/category/update",method:"post",data:{model:e}}),d=e=>t({url:"/category/delete",method:"get",params:{id:e}});export{o as c,d,a as f,s as u};

@@ -10,6 +10,7 @@ import {
 } from 'element-plus'
 import { onMounted, reactive, ref } from 'vue';
 import { cloneDeep } from 'lodash'
+import { useRouter } from 'vue-router';
 
 const list = ref<Array<Partial<Product>>>([])
 const { bool: loading, toggle } = useBool()
@@ -77,6 +78,17 @@ const fetchCategorys = () => {
   })
 }
 
+const router = useRouter();
+
+const toDetial = (row: Product) => {
+  router.push({
+    name: 'productDetail',
+    params: {
+      id: row.id
+    }
+  })
+}
+
 onMounted(() => {
   getList()
   fetchCategorys()
@@ -115,10 +127,12 @@ onMounted(() => {
         </template>
       </el-table-column>
       <el-table-column prop="sellCount" label="商品销量" align="center" />
+      <el-table-column prop="score" label="评分" align="center" />
       <el-table-column prop="createdAt" label="创建时间" align="center" />
       <el-table-column prop="updatedAt" label="更新时间" align="center" />
       <el-table-column prop="action" label="操作" align="center" min-width="120px">
         <template #default="{ row }">
+          <el-button type="success" link @click="toDetial(row)">详情</el-button>
           <el-button type="primary" link @click="handleEdit(row)">编辑</el-button>
           <el-button type="danger" link @click="handleDelete(row.id)">删除</el-button>
         </template>

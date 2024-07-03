@@ -24,7 +24,7 @@ import java.util.List;
         })
 })
 @InterceptorRefs({
-        @InterceptorRef("jwtToken"),
+//        @InterceptorRef("jwtToken"),
         @InterceptorRef("json")
 })
 @Component

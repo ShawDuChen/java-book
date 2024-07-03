@@ -35,6 +35,7 @@ declare module 'app' {
     updatedAt: string;
     category?: Category;
     sellCount: number;
+    score?: number;
   }
 
   interface Cart {
@@ -57,5 +58,27 @@ declare module 'app' {
     createdAt: string;
     updatedAt: string;
     paid: number;
+  }
+
+  interface Comment {
+    id: number;
+    content: string;
+    productId: number;
+    userId: number;
+    createdAt: string;
+    updatedAt: string;
+    user?: User;
+    product?: Product;
+  }
+  
+  interface Rating {
+    id: number;
+    score: number;
+    productId: number;
+    userId: number;
+    createdAt: string;
+    updatedAt: string;
+    user?: User;
+    product?: Product;
   }
 }

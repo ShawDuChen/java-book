@@ -68,23 +68,10 @@ public class CartServiceImpl implements CartService {
     public List<Cart> getAll(String userId) {
         Session session = getSession();
         User currentUser = userId == null ? null : session.get(User.class, Long.parseLong(userId));
-        Query<Cart> query = session.createQuery("from cart c where (user is null or user=:currentUser) AND (c.order=null) ORDER BY createdAt desc", Cart.class);
-        query.setParameter("currentUser", currentUser);
+        Query<Cart> query = session.createQuery("from cart c where (coalesce(:user, c.user) = c.user or c.user is null) AND (c.order=null) ORDER BY createdAt desc", Cart.class);
+        query.setParameter("user", currentUser);
         List<Cart> result = query.getResultList();
-        for (Cart cart : result) {
-            User user = cart.getUser();
-            Product product = cart.getProduct();
-            ShopOrder order = cart.getOrder();
-            if (order != null) {
-                cart.setOrderId(order.getId());
-            }
-            if (product != null) {
-                cart.setProductId(product.getId());
-            }
-            if (user != null) {
-                cart.setUserId(user.getId());
-            }
-        }
+        formatResult(result);
         return result;
     }
 
@@ -96,6 +83,11 @@ public class CartServiceImpl implements CartService {
         query.setFirstResult(start);
         query.setMaxResults(size);
         List<Cart> result = query.getResultList();
+        formatResult(result);
+        return result;
+    }
+
+    private void formatResult(List<Cart> result) {
         for (Cart cart : result) {
             User user = cart.getUser();
             Product product = cart.getProduct();
@@ -110,6 +102,5 @@ public class CartServiceImpl implements CartService {
                 cart.setUserId(user.getId());
             }
         }
-        return result;
     }
 }
