@@ -12,9 +12,6 @@ public class ShopOrder {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    @OneToMany(mappedBy = "order", fetch = FetchType.EAGER)
-    private List<Cart> carts;
-
     @Transient
     private long userId;
 
@@ -34,8 +31,7 @@ public class ShopOrder {
     private Date updatedAt;
 
     public ShopOrder() {}
-    public ShopOrder(List<Cart> carts, long userId, User user, Date createdAt, Date updatedAt) {
-        this.carts = carts;
+    public ShopOrder(long userId, User user, Date createdAt, Date updatedAt) {
         this.userId = userId;
         this.user = user;
         this.createdAt = createdAt;
@@ -46,12 +42,6 @@ public class ShopOrder {
     }
     public void setId(long id) {
         this.id = id;
-    }
-    public List<Cart> getCarts() {
-        return carts;
-    }
-    public void setCarts(List<Cart> carts) {
-        this.carts = carts;
     }
     public long getUserId() {
         return userId;

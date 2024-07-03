@@ -1,8 +1,6 @@
 package com.service;
 
-import com.model.Product;
-import com.model.Rating;
-import com.model.User;
+import com.model.*;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.query.Query;
@@ -10,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -26,12 +25,6 @@ public class RatingServiceImpl implements RatingService {
     @Override
     public Rating add(Rating rating) {
         Session session = getSession();
-        User user = session.get(User.class, rating.getUserId());
-        rating.setUser(user);
-        rating.setUserId(user.getId());
-        Product product = session.get(Product.class, rating.getProductId());
-        rating.setProduct(product);
-        rating.setProductId(product.getId());
         rating.setCreatedAt(new Date());
         session.persist(rating);
         return rating;
@@ -40,12 +33,6 @@ public class RatingServiceImpl implements RatingService {
     @Override
     public Rating update(Rating rating) {
         Session session = getSession();
-        User user = session.get(User.class, rating.getUserId());
-        rating.setUser(user);
-        rating.setUserId(user.getId());
-        Product product = session.get(Product.class, rating.getProductId());
-        rating.setProduct(product);
-        rating.setProductId(product.getId());
         rating.setUpdatedAt(new Date());
         session.update(rating);
         return rating;
@@ -62,41 +49,51 @@ public class RatingServiceImpl implements RatingService {
     @Override
     public List<Rating> all() {
         Session session = getSession();
-        Query<Rating> query = session.createQuery("from rating where (user is not null) AND (product is not null) order by createdAt desc", Rating.class);
-        List<Rating> result = query.getResultList();
-        formatResult(result);
-        return result;
+        Query query = session.createQuery("select r, p, u from rating r "
+                + "left join product p on p.id = r.productId "
+                + "left join user u on u.id = r.userId "
+        );
+        List<Object[]> result = query.getResultList();
+        return serialize(result);
     }
 
     @Override
     public List<Rating> findByProductId(String productId) {
         Session session = getSession();
-        Product product = productId == null ? null : session.get(Product.class, Long.parseLong(productId));
-        Query<Rating> query = session.createQuery("from rating c where (:product is null or c.product=coalesce(:product,c.product)) order by createdAt desc", Rating.class);
-        query.setParameter("product", product);
-        List<Rating> result = query.getResultList();
-        formatResult(result);
-        return result;
+        Query query = session.createQuery("select r, p, u from rating r "
+                + "left join product p on p.id = r.productId "
+                + "left join user u on u.id = r.userId "
+                + "where ((:productId,r.productId)=r.productId or r.productId is null) order by r.createdAt desc"
+        );
+        query.setParameter("productId", productId == null ? null : Long.parseLong(productId));
+        List<Object[]> result = query.getResultList();
+        return serialize(result);
     }
 
     @Override
     public List<Rating> findByUserId(String userId) {
         Session session = getSession();
-        User user = userId == null ? null : session.get(User.class, Long.parseLong(userId));
-        Query<Rating> query = session.createQuery("from rating c where (:user is null or c.user=coalesce(:user,c.user)) order by createdAt desc", Rating.class);
-        query.setParameter("user", user);
-        List<Rating> result = query.getResultList();
-        formatResult(result);
-        return result;
+        Query query = session.createQuery("select r, p, u from rating r "
+                + "left join product p on p.id = r.productId "
+                + "left join user u on u.id = r.userId "
+                + "where ((:userId,r.userId)=r.userId or r.userId is null) order by r.createdAt desc"
+        );
+        query.setParameter("userId", userId == null ? null : Long.parseLong(userId));
+        List<Object[]> result = query.getResultList();
+        return serialize(result);
     }
 
-    private void formatResult(List<Rating> ratings) {
-        for (Rating rating : ratings) {
-            User user = rating.getUser();
-            rating.setUserId(user.getId());
-            Product product = rating.getProduct();
-            rating.setProductId(product.getId());
+    private List<Rating> serialize(List<Object[]> result) {
+        List<Rating> list = new ArrayList<>();
+        for (Object[] row : result) {
+            Rating rating = (Rating) row[0];
+            Product product = (Product) row[1];
+            rating.setProduct(product);
+            User user = (User) row[2];
+            rating.setUser(user);
+            list.add(rating);
         }
+        return list;
     }
 }
 

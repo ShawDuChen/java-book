@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -27,11 +28,7 @@ public class CommentServiceImpl implements CommentService {
     @Override
     public Comment add(Comment comment) {
         Session session = getSession();
-        Product product = session.get(Product.class, comment.getProductId());
-        User user = session.get(User.class, comment.getUserId());
         comment.setCreatedAt(new Date());
-        comment.setProduct(product);
-        comment.setUser(user);
         session.persist(comment);
         return comment;
     }
@@ -39,11 +36,7 @@ public class CommentServiceImpl implements CommentService {
     @Override
     public Comment update(Comment comment) {
         Session session = getSession();
-        Product product = session.get(Product.class, comment.getProductId());
-        User user = session.get(User.class, comment.getUserId());
         comment.setUpdatedAt(new Date());
-        comment.setProduct(product);
-        comment.setUser(user);
         session.update(comment);
         return comment;
     }
@@ -58,50 +51,55 @@ public class CommentServiceImpl implements CommentService {
     @Override
     public List<Comment> all(String productId, String userId) {
         Session session = getSession();
-        Product product = productId == null ? null : session.get(Product.class, Long.parseLong(productId));
-        User user = userId == null ? null : session.get(User.class, Long.parseLong(userId));
-        Query<Comment> query = session.createQuery(
-                "from comment c where " +
-                        "(coalesce(:product, c.product) = c.product or c.product is null) and " +
-                        "(coalesce(:user, c.user) = c.user or c.user is null) " +
-                        "order by c.createdAt desc",
-                Comment.class
+        Query query = session.createQuery("select c, p, u from comment c " +
+                        "left join product p on (p.id = c.productId) " +
+                        "left join user u on (u.id = c.userId) " +
+                        "where (coalesce(:productId, c.productId) = c.productId or c.productId is null) and " +
+                        "(coalesce(:userId, c.userId) = c.userId or c.userId is null) " +
+                        "order by c.createdAt desc"
         );
-        query.setParameter("product", product);
-        query.setParameter("user", user);
-        List<Comment> result = query.getResultList();
-        updateResult(result);
-        return result;
+        query.setParameter("productId", productId == null ? null : Long.parseLong(productId));
+        query.setParameter("userId", userId == null ? null : Long.parseLong(userId));
+        List<Object[]> result = query.getResultList();
+        return serialize(result);
     }
 
     @Override
     public List<Comment> findProductComments(String productId) {
         Session session = getSession();
-        Product product = productId == null ? null : session.get(Product.class, Long.parseLong(productId));
-        Query<Comment> query = session.createQuery("from comment where (product is null or product=:product) order by createdAt desc", Comment.class);
-        query.setParameter("product", product);
-        List<Comment> result = query.getResultList();
-        updateResult(result);
-        return result;
+        Query query = session.createQuery("select c, p, u from comment c " +
+                "left join product p on (p.id = c.productId) " +
+                "left join user u on (u.id = c.userId) " +
+                "where (coalesce(:productId,c.productId)=c.productId or c.productId is null) order by c.createdAt desc"
+        );
+        query.setParameter("productId", productId == null ? null : Long.parseLong(productId));
+        List<Object[]> result = query.getResultList();
+        return serialize(result);
     }
 
     @Override
     public List<Comment> findUserComments(String userId) {
         Session session = getSession();
-        User user = userId == null ? null : session.get(User.class, Long.parseLong(userId));
-        Query<Comment> query = session.createQuery("from comment where (user is null or user=:user) order by createdAt desc", Comment.class);
-        query.setParameter("user", user);
-        List<Comment> result = query.getResultList();
-        updateResult(result);
-        return result;
+        Query query = session.createQuery("select c, p, u from comment c " +
+                "left join product p on (p.id = c.productId) " +
+                "left join user u on (u.id = c.userId) " +
+                "where (coalesce(:userId,c.userId)=c.userId or c.userId is null) order by c.createdAt desc"
+        );
+        query.setParameter("userId", userId == null ? null : Long.parseLong(userId));
+        List<Object[]> result = query.getResultList();
+        return serialize(result);
     }
 
-    private void updateResult(List<Comment> result) {
-        for (Comment comment : result) {
-            Product p = comment.getProduct();
-            User u = comment.getUser();
-            comment.setProductId(p.getId());
-            comment.setUserId(u.getId());
+    private List<Comment> serialize(List<Object[]> result) {
+        List<Comment> list = new ArrayList<>();
+        for (Object[] row : result) {
+            Comment comment = (Comment) row[0];
+            Product product = (Product) row[1];
+            comment.setProduct(product);
+            User user = (User) row[2];
+            comment.setUser(user);
+            list.add(comment);
         }
+        return list;
     }
 }

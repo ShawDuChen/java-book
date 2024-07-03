@@ -1,8 +1,8 @@
 package com.service;
 
 import com.model.Cart;
+import com.model.Category;
 import com.model.Product;
-import com.model.ShopOrder;
 import com.model.User;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -29,12 +30,6 @@ public class CartServiceImpl implements CartService {
     public void add(Cart cart) {
         Session session = getSession();
         cart.setCreatedAt(new Date());
-
-        Product product = session.get(Product.class, cart.getProductId());
-        cart.setProduct(product);
-        User user = session.get(User.class, cart.getUserId());
-        cart.setUser(user);
-
         session.save(cart);
     }
 
@@ -42,12 +37,6 @@ public class CartServiceImpl implements CartService {
     public void update(Cart cart) {
         Session session = getSession();
         cart.setUpdatedAt(new Date());
-
-        Product product = session.get(Product.class, cart.getProductId());
-        cart.setProduct(product);
-        User user = session.get(User.class, cart.getUserId());
-        cart.setUser(user);
-
         session.update(cart);
     }
 
@@ -60,47 +49,49 @@ public class CartServiceImpl implements CartService {
 
     @Override
     public Cart findById(long id) {
-        Session session = getSession();
-        return session.get(Cart.class, id);
+        return null;
     }
 
     @Override
     public List<Cart> getAll(String userId) {
         Session session = getSession();
-        User currentUser = userId == null ? null : session.get(User.class, Long.parseLong(userId));
-        Query<Cart> query = session.createQuery("from cart c where (coalesce(:user, c.user) = c.user or c.user is null) AND (c.order=null) ORDER BY createdAt desc", Cart.class);
-        query.setParameter("user", currentUser);
-        List<Cart> result = query.getResultList();
-        formatResult(result);
-        return result;
+        Query query = session.createQuery(queryString("where (coalesce(:userId, c.userId)=c.userId or c.userId is null) AND c.orderId is null "));
+        query.setParameter("userId", userId == null ? null : Long.parseLong(userId));
+        List<Object[]> result = query.getResultList();
+        return serialize(result);
     }
 
     @Override
     public List<Cart> search(int page, int size) {
-        int start = (page - 1) * size;
         Session session = getSession();
-        Query<Cart> query = session.createQuery("from cart c where c.order=null order by createdAt", Cart.class);
-        query.setFirstResult(start);
+        Query query = session.createQuery(queryString("where c.orderId is null "));
+        query.setFirstResult((page - 1) * size);
         query.setMaxResults(size);
-        List<Cart> result = query.getResultList();
-        formatResult(result);
-        return result;
+        List<Object[]> result = query.getResultList();
+        return serialize(result);
     }
 
-    private void formatResult(List<Cart> result) {
-        for (Cart cart : result) {
-            User user = cart.getUser();
-            Product product = cart.getProduct();
-            ShopOrder order = cart.getOrder();
-            if (order != null) {
-                cart.setOrderId(order.getId());
-            }
-            if (product != null) {
-                cart.setProductId(product.getId());
-            }
-            if (user != null) {
-                cart.setUserId(user.getId());
-            }
+    private List<Cart> serialize(List<Object[]> result) {
+        List<Cart> carts = new ArrayList<>();
+        for (Object[] row : result) {
+            Cart cart = (Cart) row[0];
+            Product product = (Product) row[1];
+            cart.setProduct(product);
+            User user = (User) row[2];
+            cart.setUser(user);
+            Category category = (Category) row[3];
+            product.setCategory(category);
+            carts.add(cart);
         }
+        return carts;
+    }
+
+    private String queryString(String where) {
+        return "select c, p, u, ca from cart c "
+                + "left join product p on (p.id = c.productId) "
+                + "left join user u on (u.id = c.userId) "
+                + "left join category ca on (ca.id = p.categoryId) "
+                + (where == null ? "" : where)
+                + "order by c.createdAt desc";
     }
 }

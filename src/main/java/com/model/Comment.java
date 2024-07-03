@@ -14,18 +14,16 @@ public class Comment {
     @Column(nullable = false, updatable = false, length = 255)
     private String content;
 
-    @Transient
+    @Column(name = "product_id", updatable = false, nullable = false)
     private long productId;
 
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "product_id", updatable = false, nullable = false)
+    @Transient
     private Product product;
 
-    @Transient
+    @Column(name = "user_id", updatable = false, nullable = false)
     private long userId;
 
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "user_id", updatable = false, nullable = false)
+    @Transient
     private User user;
 
     @Column(name = "created_at")
@@ -38,12 +36,10 @@ public class Comment {
 
     public Comment() {}
 
-    public Comment(String content, long productId, Product product, long userId, User user, Date createdAt, Date updatedAt) {
+    public Comment(String content, long productId, long userId, Date createdAt, Date updatedAt) {
         this.content = content;
         this.productId = productId;
-        this.product = product;
         this.userId = userId;
-        this.user = user;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
     }

@@ -14,19 +14,17 @@ public class Rating {
     @Column(nullable = false)
     private double score;
 
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "product_id", nullable = false)
-    private Product product;
-
-    @Transient
+    @Column(name = "product_id", nullable = false)
     private long productId;
 
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "user_id", nullable = false)
-    private User user;
+    @Transient
+    private Product product;
+
+    @Column(name = "user_id", nullable = false)
+    private long userId;
 
     @Transient
-    private long userId;
+    private User user;
 
     @Column(name = "created_at", updatable = false, insertable = true)
     @Temporal(TemporalType.TIMESTAMP)
@@ -37,10 +35,12 @@ public class Rating {
     private Date updatedAt;
 
     public Rating() {}
-    public Rating(double score, Product product, User user) {
+    public Rating(double score, long productId, long userId, Date createdAt, Date updatedAt) {
         this.score = score;
-        this.product = product;
-        this.user = user;
+        this.productId = productId;
+        this.userId = userId;
+        this.createdAt = createdAt;
+        this.updatedAt = updatedAt;
     }
 
     public long getId() {

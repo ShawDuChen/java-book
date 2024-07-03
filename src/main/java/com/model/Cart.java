@@ -11,28 +11,25 @@ public class Cart {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    @Transient
+    @Column(name = "product_id", nullable = false)
     private long productId;
 
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "product_id", nullable = false)
+    @Transient
     private Product product;
 
-    @Transient
+    @Column(name = "user_id", nullable = false)
     private long userId;
 
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "user_id", nullable = false)
+    @Transient
     private User user;
 
     @Column
     private int count = 1;
 
-    @Transient
-    private long orderId;
+    @Column(name = "order_id")
+    private Long orderId;
 
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "order_id")
+    @Transient
     private ShopOrder order;
 
     @Column(name = "created_at")
@@ -44,14 +41,11 @@ public class Cart {
     private Date updatedAt;
 
     public Cart() {}
-    public Cart(long productId, Product product, long userId, User user, int count, long orderId, ShopOrder order, Date createdAt, Date updatedAt) {
+    public Cart(long productId, long userId, Long orderId, int count, Date createdAt, Date updatedAt) {
         this.productId = productId;
-        this.product = product;
         this.userId = userId;
-        this.user = user;
-        this.count = count;
         this.orderId = orderId;
-        this.order = order;
+        this.count = count;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
     }
@@ -103,10 +97,10 @@ public class Cart {
     public int getCount() {
         return count;
     }
-    public void setOrderId(long orderId) {
+    public void setOrderId(Long orderId) {
         this.orderId = orderId;
     }
-    public long getOrderId() {
+    public Long getOrderId() {
         return orderId;
     }
     public void setOrder(ShopOrder order) {

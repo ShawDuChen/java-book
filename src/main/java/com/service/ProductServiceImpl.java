@@ -104,8 +104,8 @@ public class ProductServiceImpl implements ProductService {
 
     public String queryString(String orderBy, String where) {
         return "select p, ROUND(avg(r.score), 2) as avgScore, sum(c.count) as sellCount, ct from product p "
-                + "LEFT join rating r on p = r.product "
-                + "LEFT join cart c on (p = c.product and c.order is not null) "
+                + "LEFT join rating r on p.id = r.productId "
+                + "LEFT join cart c on (p.id = c.productId and c.orderId is not null) "
                 + "LEFT join category ct on (ct.id = p.categoryId)"
                 + (where == null ? "" : where)
                 + "group by p.id " + (orderBy == null ? "order by p.createdAt desc" : orderBy);
